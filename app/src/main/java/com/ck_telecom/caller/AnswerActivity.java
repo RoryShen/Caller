@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 /**
  * Created by Rory on 2017/11/08   .
@@ -22,5 +23,10 @@ public class AnswerActivity extends Activity {
         Intent mainIntent = new Intent(this, MainActivity.class);
         startActivity(mainIntent);
         finish();
+    }
+
+    public void Start(View view) {
+        Intent inComingcall = new Intent(AnswerActivity.this, InComingCallService.class);
+        startService(inComingcall);
     }
 }

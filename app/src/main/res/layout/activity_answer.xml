@@ -130,6 +130,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:text="Start"
+        android:onClick="Start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/bt_stop" />
 
