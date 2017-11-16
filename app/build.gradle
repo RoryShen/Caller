@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+            def signFile = file(new File('C:/debug.keystore'))
+            storeFile file('C:/debug.keystore')
+        }
+    }
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.ck_telecom.caller"
@@ -14,6 +23,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
     buildToolsVersion '27.0.0'
