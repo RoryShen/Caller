@@ -8,8 +8,8 @@
         android:id="@+id/Notes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="输入号码/次数/间隔时间，然后点击开始拨号即可开始测试咯！"
-        android:textSize="25dp"
+        android:text="@string/tv_call_notes"
+        android:textSize="25sp"
 
         />
 
@@ -18,8 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="号码："
-        android:textSize="25dp"
+        android:text="@string/tv_call_phone"
+        android:textSize="25sp"
         app:layout_constraintTop_toBottomOf="@id/Notes" />
 
     <EditText
@@ -27,10 +27,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="请输入对方号码！"
+        android:hint="@string/et_call_phone"
         android:inputType="phone"
         android:maxHeight="50dp"
-        android:textSize="25dp"
+        android:textSize="25sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_num"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_num" />
@@ -42,19 +42,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:maxHeight="50dp"
-        android:text="次数:"
-        android:textSize="25dp"
+        android:text="@string/tv_call_times"
+        android:textSize="25sp"
         app:layout_constraintTop_toBottomOf="@id/et_phone_ref_num" />
     <!--拨打次数-->
     <EditText
         android:id="@+id/et_total"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="请输入拨打次数!"
+        android:hint="@string/ht_call_times"
         android:inputType="number"
         android:maxHeight="50dp"
         android:text="50"
-        android:textSize="25dp"
+        android:textSize="25sp"
 
         app:layout_constraintBaseline_toBaselineOf="@id/tv_times"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,7 +66,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="间隔:"
+        android:text="@string/tv_call_frequency"
         android:textSize="25dp"
         app:layout_constraintTop_toBottomOf="@id/tv_times" />
 
@@ -75,11 +75,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="请输入两次拨打间隔时间!"
+        android:hint="@string/ht_call_frequency"
         android:inputType="number"
         android:maxHeight="50dp"
         android:text="30"
-        android:textSize="25dp"
+        android:textSize="25sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_frequency"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_frequency"
@@ -91,20 +91,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxHeight="40dp"
-        android:text="Total:"
+        android:text="@string/tv_call_total"
         android:textAlignment="center"
-        android:textSize="25dp"
+        android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@id/bt_stop" />
 
     <TextView
         android:id="@+id/tv_total_num"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:maxHeight="40dp"
         android:text="0"
         android:textAlignment="center"
-        android:textSize="25dp"
+        android:textSize="25sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_total_tag"
         app:layout_constraintLeft_toRightOf="@id/tv_total_tag" />
 
@@ -112,11 +112,11 @@
         android:id="@+id/tv_pass_tag"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:maxHeight="40dp"
-        android:text="Pass:"
+        android:text="@string/tv_call_pass"
         android:textAlignment="center"
-        android:textSize="25dp"
+        android:textSize="25sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_total_num"
         app:layout_constraintLeft_toRightOf="@id/tv_total_num" />
 
@@ -124,11 +124,11 @@
         android:id="@+id/tv_pass_num"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:maxHeight="40dp"
         android:text="0"
         android:textAlignment="center"
-        android:textSize="25dp"
+        android:textSize="25sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_pass_tag"
         app:layout_constraintLeft_toRightOf="@id/tv_pass_tag" />
 
@@ -136,11 +136,11 @@
         android:id="@+id/tv_fail_tag"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:maxHeight="40dp"
-        android:text="Fail:"
+        android:text="@string/tv_call_fail"
         android:textAlignment="center"
-        android:textSize="25dp"
+        android:textSize="25sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_pass_num"
         app:layout_constraintLeft_toRightOf="@id/tv_pass_num" />
 
@@ -148,12 +148,12 @@
         android:id="@+id/tv_fail_num"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:maxHeight="40dp"
         android:text="0"
         android:textAlignment="center"
         android:textColor="#ff0000"
-        android:textSize="25dp"
+        android:textSize="25sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_fail_tag"
         app:layout_constraintLeft_toRightOf="@id/tv_fail_tag" />
     <!--开始-->
@@ -161,9 +161,9 @@
         android:id="@+id/bt_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:text="开始拨号"
+        android:layout_marginEnd="20dp"
         android:onClick="Call"
+        android:text="@string/bt_call_start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/bt_stop" />
     <!--停止-->
@@ -171,7 +171,7 @@
         android:id="@+id/bt_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="停止拨号"
+        android:text="@string/bt_call_stop"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

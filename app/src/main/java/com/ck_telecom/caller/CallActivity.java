@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -99,6 +100,9 @@ public class CallActivity extends Activity {
         callIntent.putExtra("phone", phoneNum);
         callIntent.putExtra("times", times);
         callIntent.putExtra("frequency", frequency);
+        Log.e("Call,Times Service", times + "");
+        Log.e("Call,frequency Service", frequency + "");
+        startService(callIntent);
 
     }
 
@@ -106,6 +110,7 @@ public class CallActivity extends Activity {
 
         startCallService();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

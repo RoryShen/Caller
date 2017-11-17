@@ -10,5 +10,27 @@
     <string name="quit">退出</string>
     <string name="times_error">读取错误，请检查次数和间隔时间！</string>
     <string name="number_short">当前号码太短了。请重新输入哦！</string>
+    <string name="tv_call_pass">Pass:</string>
+    <string name="tv_call_total">Total:</string>
+    <string name="ht_call_frequency">请输入两次拨打间隔时间!</string>
+    <string name="tv_call_frequency">间隔:</string>
+    <string name="ht_call_times">请输入拨打次数!</string>
+    <string name="tv_call_times">次数:</string>
+    <string name="et_call_phone">请输入对方号码！</string>
+    <string name="tv_call_phone">号码：</string>
+    <string name="tv_call_notes">输入号码/次数/间隔时间，然后点击开始拨号即可开始测试咯！</string>
+    <string name="tv_answer_notes">被叫方，用来接听来电！</string>
+    <string name="et_answer_phone_ref_num">请输入对方号码！</string>
+    <string name="et_answer_wait">请输入等待时间</string>
+    <string name="ck_answer">接听</string>
+    <string name="tv_answer_status">将接听指定号码来电</string>
+    <string name="tv_answer_total">Total:</string>
+    <string name="tv_answer_pass">Pass:</string>
+    <string name="tv_answer_fail">Fail:</string>
+    <string name="bt_answer_start">Start</string>
+    <string name="bt_answer_stop">Stop</string>
+    <string name="tv_call_fail">Fail:</string>
+    <string name="bt_call_start">开始拨号</string>
+    <string name="bt_call_stop">停止拨号</string>
 
 </resources>
