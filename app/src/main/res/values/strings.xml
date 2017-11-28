@@ -32,5 +32,6 @@
     <string name="tv_call_fail">Fail:</string>
     <string name="bt_call_start">开始拨号</string>
     <string name="bt_call_stop">停止拨号</string>
+    <string name="Call_Completed">呼叫结束</string>
 
 </resources>

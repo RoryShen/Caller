@@ -14,6 +14,8 @@ import android.widget.Toast;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static com.ck_telecom.caller.CallUtils.answerRingingCall;
+
 /**
  * Created by Rory on 11/14/2017.
  */
@@ -63,7 +65,7 @@ public class InComingCallService extends Service {
                             telecomManager.acceptRingingCall();
 
                         } else {
-                            answerRingingCall();
+                            answerRingingCall(getApplicationContext ());
                         }
 
                     }
@@ -77,29 +79,5 @@ public class InComingCallService extends Service {
 
     }
 
-    /**
-     * Answer the incoming call.
-     */
-    private void answerRingingCall() {
-        try {
-            // get telephony manager.
-            Class tm = Class.forName("android.telephony.TelephonyManager");
-            telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-            //get answerRingCall method.
-            Method answerRingingCall = tm.getDeclaredMethod("answerRingingCall");
-            answerRingingCall.setAccessible(true);
 
-            //Invoke the method.
-            answerRingingCall.invoke(telephonyManager);
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
 }

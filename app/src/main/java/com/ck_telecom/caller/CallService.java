@@ -4,13 +4,10 @@ package com.ck_telecom.caller;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
-
 import android.net.Uri;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
+import android.telecom.TelecomManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,9 +20,7 @@ public class CallService extends Service {
     private String phoneNum;
     private int times;
     private int frequency;
-//   callIntent.putExtra("phone", phoneNum);
-//        callIntent.putExtra("times", times);
-//        callIntent.putExtra("frequency", frequency);
+    private boolean exit;
 
     @Nullable
     @Override
@@ -35,13 +30,18 @@ public class CallService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.e ("Service", "onStartCommand");
+
+//        if (null != intent) {
         dataIntent = intent;
-        phoneNum = intent.getStringExtra("phone");
-        times = intent.getIntExtra("times", -1);
-        frequency = intent.getIntExtra("frequency", -1);
-        makeCall();
-        Log.e("Call,Times", times + "");
-        Log.e("Call,frequency", frequency + "");
+        phoneNum = intent.getStringExtra ("phone");
+        times = intent.getIntExtra ("times", -1);
+        frequency = intent.getIntExtra ("frequency", -1);
+        makeCall ( );
+        Log.e ("Call,Times", times + "");
+        Log.e ("Call,frequency", frequency + "");
+
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -51,42 +51,53 @@ public class CallService extends Service {
 
         if (times != -1 && frequency != -1) {
             final Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNum));
-            if (phoneNum.matches("1[3-8]\\d{9}$")) {
-                new Thread(new Runnable() {
+            final TelecomManager telecomManager = (TelecomManager) getSystemService (TELECOM_SERVICE);
+            if (CallUtils.checkNumber (phoneNum)) {
+                new Thread (new Runnable ( ) {
                     @Override
                     public void run() {
-                        for(;;){
-                            Log.e("Call,Times", getCallStatus() + "");
+                        int i = 0;
+                        for (; i < times; i++) {
+                            if (!exit) {
+                                startActivity (callIntent);
+                                try {
+                                    Thread.sleep (frequency * 1000);
+                                    CallUtils.endCall (getApplicationContext ( ));
+                                    Thread.sleep (5000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace ( );
+                                }
+                            } else {
+                                if (telecomManager.isInCall ( )) {
+                                    CallUtils.endCall (getApplicationContext ( ));
+                                }
+                                Log.e ("Service","呼叫未完成，当前共执行了！"+i);
+
+                                //Toast.makeText (getApplicationContext (), "呼叫未完成，当前共执行了" + i, Toast.LENGTH_SHORT).show ( );
+                            }
+
+
+                        }
+                        if (i >= 49) {
+                            Log.e ("Service",getString (R.string.Call_Completed));
+                            //Toast.makeText (getApplicationContext (), getString (R.string.Call_Completed), Toast.LENGTH_SHORT).show ( );
+                            Thread.interrupted ( );
+
                         }
 
-
                     }
-                }).start();
+                }).start ( );
 
-
-            } else if (phoneNum.matches("^\\d+$")) {
-                switch (phoneNum.length()) {
-                    case 5:
-                    case 6:
-                    case 7:
-                    case 8:
-                        startActivity(callIntent);
-                        break;
-                    default:
-                        Toast.makeText(this, R.string.number_short, Toast.LENGTH_SHORT).show();
-                }
-
-            } else {
-                Toast.makeText(this, R.string.times_error, Toast.LENGTH_SHORT).show();
             }
         }
 
+
     }
 
-    private int getCallStatus() {
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-        return telephonyManager.getCallState();
+    @Override
+    public void onDestroy() {
+        super.onDestroy ( );
+        exit = true;
+        Log.e ("Service", "Service Stoped!");
     }
-
-
 }

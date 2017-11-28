@@ -6,11 +6,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -119,5 +116,10 @@ public class CallActivity extends Activity {
         if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
             finish();
         }
+    }
+
+    public void Stop(View view) {
+        Intent callIntent = new Intent (CallActivity.this, CallService.class);
+        stopService (callIntent);
     }
 }
