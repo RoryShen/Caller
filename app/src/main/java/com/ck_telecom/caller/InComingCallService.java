@@ -11,9 +11,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import static com.ck_telecom.caller.CallUtils.answerRingingCall;
 
 /**
@@ -65,9 +62,11 @@ public class InComingCallService extends Service {
                             telecomManager.acceptRingingCall();
 
                         } else {
-                            answerRingingCall(getApplicationContext ());
+                            answerRingingCall(getApplicationContext());
                         }
 
+                    } else {
+                        CallUtils.endCall(getApplicationContext());
                     }
             }
         }
