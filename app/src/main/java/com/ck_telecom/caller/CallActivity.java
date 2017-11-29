@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import static com.ck_telecom.caller.R.id.et_frequency;
 import static com.ck_telecom.caller.R.id.et_phone_ref_num;
@@ -99,8 +100,15 @@ public class CallActivity extends Activity {
         callIntent.putExtra("frequency", frequency);
         Log.e("Call,Times Service", times + "");
         Log.e("Call,frequency Service", frequency + "");
-        startService(callIntent);
+        //判断号码是否符合规则。
+        if (phoneNum.isEmpty() || phoneNum.length() < 5 ) {
+            Toast.makeText(this, "请至少输入5位数字！", Toast.LENGTH_SHORT).show();
+        } else {
+            {
+                startService(callIntent);
+            }
 
+        }
     }
 
     public void Call(View view) {
@@ -119,7 +127,7 @@ public class CallActivity extends Activity {
     }
 
     public void Stop(View view) {
-        Intent callIntent = new Intent (CallActivity.this, CallService.class);
-        stopService (callIntent);
+        Intent callIntent = new Intent(CallActivity.this, CallService.class);
+        stopService(callIntent);
     }
 }

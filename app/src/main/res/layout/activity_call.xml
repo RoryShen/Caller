@@ -85,6 +85,13 @@
         app:layout_constraintStart_toEndOf="@id/tv_frequency"
         app:layout_constraintTop_toBottomOf="@id/et_total" />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:enabled="false"
+        android:hint="@string/ignore_incoming"
+        app:layout_constraintTop_toBottomOf="@id/et_frequency" />
     <!--统计信息-->
     <TextView
         android:id="@+id/tv_total_tag"
@@ -171,8 +178,8 @@
         android:id="@+id/bt_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bt_call_stop"
         android:onClick="Stop"
+        android:text="@string/bt_call_stop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

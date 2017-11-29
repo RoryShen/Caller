@@ -33,5 +33,6 @@
     <string name="bt_call_start">开始拨号</string>
     <string name="bt_call_stop">停止拨号</string>
     <string name="Call_Completed">呼叫结束</string>
+    <string name="ignore_incoming">拒接来电？</string>
 
 </resources>
