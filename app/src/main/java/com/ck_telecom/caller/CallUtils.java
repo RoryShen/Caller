@@ -1,11 +1,7 @@
 package com.ck_telecom.caller;
 
 
-import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
-import android.provider.CallLog;
 import android.telephony.TelephonyManager;
 
 import java.lang.reflect.InvocationTargetException;
@@ -26,19 +22,19 @@ public class CallUtils {
     public static void endCall(Context context) {
         try {
 
-            Class<?> telephoneManager = Class.forName ("android.telephony.TelephonyManager");
-            Method endCall = telephoneManager.getDeclaredMethod ("endCall", null);
-            TelephonyManager tm = (TelephonyManager) context.getSystemService (TELEPHONY_SERVICE);
-            endCall.setAccessible (true);
-            endCall.invoke (tm);
+            Class<?> telephoneManager = Class.forName("android.telephony.TelephonyManager");
+            Method endCall = telephoneManager.getDeclaredMethod("endCall", null);
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
+            endCall.setAccessible(true);
+            endCall.invoke(tm);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace ( );
+            e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            e.printStackTrace ( );
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace ( );
+            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            e.printStackTrace ( );
+            e.printStackTrace();
         }
     }
 
@@ -48,23 +44,23 @@ public class CallUtils {
     public static void answerRingingCall(Context context) {
         try {
             // get telephony manager.
-            Class<?> tm = Class.forName ("android.telephony.TelephonyManager");
-            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService (TELEPHONY_SERVICE);
+            Class<?> tm = Class.forName("android.telephony.TelephonyManager");
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
             //get answerRingCall method.
-            Method answerRingingCall = tm.getDeclaredMethod ("answerRingingCall");
-            answerRingingCall.setAccessible (true);
+            Method answerRingingCall = tm.getDeclaredMethod("answerRingingCall");
+            answerRingingCall.setAccessible(true);
 
             //Invoke the method.
-            answerRingingCall.invoke (telephonyManager);
+            answerRingingCall.invoke(telephonyManager);
 
         } catch (ClassNotFoundException e) {
-            e.printStackTrace ( );
+            e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            e.printStackTrace ( );
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace ( );
+            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            e.printStackTrace ( );
+            e.printStackTrace();
         }
     }
 
@@ -75,28 +71,10 @@ public class CallUtils {
      * @return if the number is correct return true.
      */
     public static boolean checkNumber(String phoneNum) {
-        boolean isCorrect = false;
 
-        if (phoneNum.matches ("1[3-8]\\d{9}$"))
 
-        {
-            isCorrect = true;
-        } else if (phoneNum.matches ("^\\d+$"))
+        return phoneNum.matches("((\\d{11})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))$)");
 
-        {
-            switch (phoneNum.length ( )) {
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                    isCorrect = true;
-                    break;
-                default:
-                    isCorrect = false;
-                    break;
-            }
-        }
-        return isCorrect;
 
     }
 

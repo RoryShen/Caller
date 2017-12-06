@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/Notes"
+        android:id="@+id/an_Notes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/tv_answer_notes"
@@ -15,50 +15,50 @@
         />
 
     <EditText
-        android:id="@+id/et_phone_ref_num"
+        android:id="@+id/et_an_phone_ref_num"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="@string/et_answer_phone_ref_num"
         android:inputType="phone"
         android:maxHeight="50dp"
-        app:layout_constraintTop_toBottomOf="@id/Notes" />
+        app:layout_constraintTop_toBottomOf="@id/an_Notes" />
 
     <EditText
-        android:id="@+id/et_wait"
+        android:id="@+id/et_an_wait"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="@string/et_answer_wait"
         android:inputType="number"
         android:maxHeight="50dp"
-        app:layout_constraintTop_toBottomOf="@id/et_phone_ref_num"
+        app:layout_constraintTop_toBottomOf="@id/et_an_phone_ref_num"
 
         />
 
     <CheckBox
-        android:id="@+id/ck_answer"
+        android:id="@+id/ck_an_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
 
         android:enabled="false"
         android:hint="@string/tv_answer_status"
-        app:layout_constraintTop_toBottomOf="@id/et_wait" />
+        app:layout_constraintTop_toBottomOf="@id/et_an_wait" />
 
 
     <TextView
-        android:id="@+id/tv_total_tag"
+        android:id="@+id/tv_an_total_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxHeight="40dp"
         android:text="@string/tv_answer_total"
         android:textAlignment="center"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@id/bt_stop" />
+        app:layout_constraintBottom_toTopOf="@id/bt_an_stop" />
 
     <TextView
-        android:id="@+id/tv_total_num"
+        android:id="@+id/tv_an_total_num"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginLeft="20dp"
@@ -66,70 +66,70 @@
         android:text="0"
         android:textAlignment="center"
         android:textSize="25dp"
-        app:layout_constraintBaseline_toBaselineOf="@id/tv_total_tag"
-        app:layout_constraintLeft_toRightOf="@id/tv_total_tag" />
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_an_total_tag"
+        app:layout_constraintLeft_toRightOf="@id/tv_an_total_tag" />
 
-    <TextView
-        android:id="@+id/tv_pass_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginLeft="20dp"
-        android:maxHeight="40dp"
-        android:text="@string/tv_answer_pass"
-        android:textAlignment="center"
-        android:textSize="25sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/tv_total_num"
-        app:layout_constraintLeft_toRightOf="@id/tv_total_num" />
+    <!--<TextView-->
+    <!--android:id="@+id/tv_an_pass_tag"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="35dp"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:maxHeight="40dp"-->
+    <!--android:text="@string/tv_answer_pass"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textSize="25sp"-->
+    <!--app:layout_constraintBaseline_toBaselineOf="@id/tv_an_total_num"-->
+    <!--app:layout_constraintLeft_toRightOf="@id/tv_an_total_num" />-->
 
-    <TextView
-        android:id="@+id/tv_pass_num"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginLeft="20dp"
-        android:maxHeight="40dp"
-        android:text="0"
-        android:textAlignment="center"
-        android:textSize="25sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/tv_pass_tag"
-        app:layout_constraintLeft_toRightOf="@id/tv_pass_tag" />
+    <!--<TextView-->
+    <!--android:id="@+id/tv_an_pass_num"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="35dp"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:maxHeight="40dp"-->
+    <!--android:text="0"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textSize="25sp"-->
+    <!--app:layout_constraintBaseline_toBaselineOf="@id/tv_an_pass_tag"-->
+    <!--app:layout_constraintLeft_toRightOf="@id/tv_an_pass_tag" />-->
 
-    <TextView
-        android:id="@+id/tv_fail_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginLeft="20dp"
-        android:maxHeight="40dp"
-        android:text="@string/tv_answer_fail"
-        android:textAlignment="center"
-        android:textSize="25dp"
-        app:layout_constraintBaseline_toBaselineOf="@id/tv_pass_num"
-        app:layout_constraintLeft_toRightOf="@id/tv_pass_num" />
+    <!--<TextView-->
+    <!--android:id="@+id/tv_an_fail_tag"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="35dp"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:maxHeight="40dp"-->
+    <!--android:text="@string/tv_answer_fail"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textSize="25dp"-->
+    <!--app:layout_constraintBaseline_toBaselineOf="@id/tv_an_pass_num"-->
+    <!--app:layout_constraintLeft_toRightOf="@id/tv_an_pass_num" />-->
 
-    <TextView
-        android:id="@+id/tv_fail_num"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginLeft="20dp"
-        android:maxHeight="40dp"
-        android:text="0"
-        android:textAlignment="center"
-        android:textColor="#ff0000"
-        android:textSize="25sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/tv_fail_tag"
-        app:layout_constraintLeft_toRightOf="@id/tv_fail_tag" />
+    <!--<TextView-->
+    <!--android:id="@+id/tv_an_fail_num"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="35dp"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:maxHeight="40dp"-->
+    <!--android:text="0"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textColor="#ff0000"-->
+    <!--android:textSize="25sp"-->
+    <!--app:layout_constraintBaseline_toBaselineOf="@id/tv_an_fail_tag"-->
+    <!--app:layout_constraintLeft_toRightOf="@id/tv_an_fail_tag" />-->
 
     <Button
-        android:id="@+id/bt_start"
+        android:id="@+id/bt_an_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:onClick="Start"
         android:text="@string/bt_answer_start"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/bt_stop" />
+        app:layout_constraintRight_toLeftOf="@id/bt_an_stop" />
 
     <Button
-        android:id="@+id/bt_stop"
+        android:id="@+id/bt_an_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="Stop"

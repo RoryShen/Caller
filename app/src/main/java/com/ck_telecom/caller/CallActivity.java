@@ -11,11 +11,13 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import static com.ck_telecom.caller.R.id.et_frequency;
-import static com.ck_telecom.caller.R.id.et_phone_ref_num;
-import static com.ck_telecom.caller.R.id.et_total;
+import static android.widget.Toast.LENGTH_SHORT;
+import static com.ck_telecom.caller.R.id.et_ca_frequency;
+import static com.ck_telecom.caller.R.id.et_ca_phone_ref_num;
+import static com.ck_telecom.caller.R.id.et_ca_total;
 
 /**
  * Created by Rory on 2017/11/08   .
@@ -30,16 +32,40 @@ public class CallActivity extends Activity {
     };
 
     private PermissionUtils mPermissionsChecker; // 权限检测器
+    private static TextView tvTotal;
+    private static TextView tvLog;
+    private static TextView tvFail;
+    private static TextView tvPass;
+    private static EditText phone;
+    private static EditText etTimes;
+    private static EditText etFrequency;
+    private static String phoneNum;
+    private int times;
+    private int frequency;
+    private static Activity callActivity;
+
+
+    public static Activity getCallActivity() {
+        return callActivity;
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        callActivity = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call);
         mPermissionsChecker = new PermissionUtils(this);
         callSharePreferences = getSharedPreferences("config", MODE_PRIVATE);
-        EditText et_phone = findViewById(et_phone_ref_num);
+        EditText et_phone = findViewById(et_ca_phone_ref_num);
         et_phone.setText(callSharePreferences.getString("phoneNum", ""));
-
+        tvTotal = findViewById(R.id.tv_ca_total_num);
+        tvLog = findViewById(R.id.tv_ca_log);
+        tvFail = findViewById(R.id.tv_ca_fail_num);
+        tvLog.setTextSize(20);
+        tvLog.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        tvLog.setText(getString(R.string.notices));
+        tvPass = findViewById(R.id.tv_ca_pass_num);
     }
 
     @Override
@@ -86,13 +112,6 @@ public class CallActivity extends Activity {
     private void startCallService() {
 
 
-        EditText phone = findViewById(et_phone_ref_num);
-        String phoneNum = phone.getText().toString();
-        EditText etTimes = findViewById(et_total);
-        int times = Integer.parseInt(etTimes.getText().toString());
-        EditText etFrequency = findViewById(et_frequency);
-        int frequency = Integer.parseInt(etFrequency.getText().toString());
-
         callSharePreferences.edit().putString("phoneNum", phoneNum).apply();
         Intent callIntent = new Intent(CallActivity.this, CallService.class);
         callIntent.putExtra("phone", phoneNum);
@@ -101,18 +120,35 @@ public class CallActivity extends Activity {
         Log.e("Call,Times Service", times + "");
         Log.e("Call,frequency Service", frequency + "");
         //判断号码是否符合规则。
-        if (phoneNum.isEmpty() || phoneNum.length() < 5 ) {
+        if (phoneNum.isEmpty() || phoneNum.length() < 5) {
             Toast.makeText(this, "请至少输入5位数字！", Toast.LENGTH_SHORT).show();
-        } else {
+        } else if (CallUtils.checkNumber(phoneNum)) {
             {
+                phone.setEnabled(false);
+                etTimes.setEnabled(false);
+                etFrequency.setEnabled(false);
                 startService(callIntent);
             }
 
+        } else {
+            Toast.makeText(this, "请检查您输入的号码，并重新输入。", LENGTH_SHORT).show();
         }
     }
 
     public void Call(View view) {
+        phone = findViewById(et_ca_phone_ref_num);
+        phoneNum = phone.getText().toString();
+        etTimes = findViewById(et_ca_total);
+        times = Integer.parseInt(etTimes.getText().toString());
+        etFrequency = findViewById(et_ca_frequency);
+        frequency = Integer.parseInt(etFrequency.getText().toString());
+        tvTotal.setText(times + "");
+        tvFail.setText(times + "");
+        tvLog.setText(getString(R.string.testing));
+        tvLog.setTextSize(40);
+        tvLog.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
+        tvPass.setText(0 + "");
         startCallService();
     }
 
@@ -127,7 +163,12 @@ public class CallActivity extends Activity {
     }
 
     public void Stop(View view) {
+        phone.setEnabled(true);
+        etTimes.setEnabled(true);
+        etFrequency.setEnabled(true);
+
         Intent callIntent = new Intent(CallActivity.this, CallService.class);
         stopService(callIntent);
+
     }
 }
