@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import static com.ck_telecom.caller.AnswerActivity.getAnswerActivity;
+import static com.ck_telecom.caller.CallUtils.answerRingingCall;
 
 /**
  * Created by Rory on 11/14/2017.
@@ -80,21 +81,21 @@ public class InComingCallService extends Service {
             super.onCallStateChanged(state, incomingNumber);
             switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING:
-//                    Toast.makeText(InComingCallService.this, "来电号码是：" + incomingNumber, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(InComingCallService.this, "来电号码是：" + incomingNumber, Toast.LENGTH_SHORT).show();
                     if (inComingNumber.equals(incomingNumber)) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                            //telecomManager.acceptRingingCall();
+                            telecomManager.acceptRingingCall();
                             total.setText(sum + "");
                         } else {
 
-                            //answerRingingCall(getApplicationContext());
+                            answerRingingCall(getApplicationContext());
                             sum = sum + 1;
                             Log.i("InComing", sum + "");
                             total.setText(sum + "");
-                            Toast.makeText(getAnswerActivity(), sum + "", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getAnswerActivity(), sum + "", Toast.LENGTH_SHORT).show();
                         }
-                        //61339418
+
 
                     } else {
                         CallUtils.endCall(getApplicationContext());

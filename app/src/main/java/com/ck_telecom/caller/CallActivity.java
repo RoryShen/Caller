@@ -122,16 +122,20 @@ public class CallActivity extends Activity {
         //判断号码是否符合规则。
         if (phoneNum.isEmpty() || phoneNum.length() < 5) {
             Toast.makeText(this, "请至少输入5位数字！", Toast.LENGTH_SHORT).show();
+            tvLog.setText("号码异常，请重试！");
         } else if (CallUtils.checkNumber(phoneNum)) {
             {
                 phone.setEnabled(false);
                 etTimes.setEnabled(false);
                 etFrequency.setEnabled(false);
+
                 startService(callIntent);
             }
 
         } else {
             Toast.makeText(this, "请检查您输入的号码，并重新输入。", LENGTH_SHORT).show();
+            //tvLog.setText("请检查您输入的号码，并重新输入");
+
         }
     }
 
