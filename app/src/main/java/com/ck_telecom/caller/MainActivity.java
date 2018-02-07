@@ -1,6 +1,6 @@
 package com.ck_telecom.caller;
 
-import android.Manifest;
+
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,4 +39,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void contacts(View view) {
+        Intent intent = new Intent(this, ContactsActivity.class);
+        startActivityForResult(intent, 1);
+        finish();
+    }
 }

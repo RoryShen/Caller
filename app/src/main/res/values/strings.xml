@@ -37,5 +37,6 @@
     <string name="manually_stop">已经手动停止</string>
     <string name="notices">间隔时间建议设置为30秒以上哦，否则会打不通哦！</string>
     <string name="testing">测试进行中</string>
+    <string name="main_notes">If you want make call please select Call; If you want answer call please select answer.</string>
 
 </resources>

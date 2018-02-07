@@ -70,26 +70,19 @@ public class CallService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e("Service", "onStartCommand");
 
-//        CallActivity callActivity = new CallActivity();
-//        tvFail = callActivity.findViewById(R.id.tv_an_fail_num);
-//        tvPass = callActivity.findViewById(R.id.tv_an_pass_num);
-//        tvLog = callActivity.findViewById(R.id.tv_log);
-//        etTimes = callActivity.findViewById(et_total);
-//        etFrequency = callActivity.findViewById(et_frequency);
-//        phone = callActivity.findViewById(et_phone_ref_num);
+
         //读取界面传过来的信息
 
         phoneNum = intent.getStringExtra("phone");
         times = intent.getIntExtra("times", -1);
         frequency = intent.getIntExtra("frequency", -1);
-//        tvPass = tvPass.findViewById(R.id.tv_pass_num);
-//        tvFail = tvFail.findViewById(R.id.tv_fail_num);
+
         makeCall();
         Log.e("Call,Times", times + "");
         Log.e("Call,frequency", frequency + "");
 
         mHandler = new MyHandler(this);
-//        tvPass.findViewById(R.id.tv_pass_num);
+
         return super.onStartCommand(intent, flags, startId);
     }
 
