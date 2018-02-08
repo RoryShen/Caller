@@ -1,4 +1,4 @@
-package com.ck_telecom.caller;
+package com.ck_telecom.caller.activity;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -12,6 +12,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+
+import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.utils.PermissionUtils;
 
 /**
  * 权限获取页面

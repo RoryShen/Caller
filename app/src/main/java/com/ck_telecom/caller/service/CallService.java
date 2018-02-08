@@ -1,4 +1,4 @@
-package com.ck_telecom.caller;
+package com.ck_telecom.caller.service;
 
 
 import android.annotation.SuppressLint;
@@ -16,11 +16,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.utils.CallUtils;
+
 import java.lang.ref.WeakReference;
 
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
 import static android.widget.Toast.LENGTH_SHORT;
-import static com.ck_telecom.caller.CallActivity.getCallActivity;
+import static com.ck_telecom.caller.activity.CallActivity.getCallActivity;
 import static com.ck_telecom.caller.R.id.et_ca_frequency;
 import static com.ck_telecom.caller.R.id.et_ca_phone_ref_num;
 import static com.ck_telecom.caller.R.id.et_ca_total;

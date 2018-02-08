@@ -1,4 +1,4 @@
-package com.ck_telecom.caller;
+package com.ck_telecom.caller.service;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -13,8 +13,11 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static com.ck_telecom.caller.AnswerActivity.getAnswerActivity;
-import static com.ck_telecom.caller.CallUtils.answerRingingCall;
+import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.utils.CallUtils;
+
+import static com.ck_telecom.caller.activity.AnswerActivity.getAnswerActivity;
+import static com.ck_telecom.caller.utils.CallUtils.answerRingingCall;
 
 /**
  * Created by Rory on 11/14/2017.

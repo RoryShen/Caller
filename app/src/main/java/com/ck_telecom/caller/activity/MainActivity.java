@@ -1,10 +1,15 @@
-package com.ck_telecom.caller;
+package com.ck_telecom.caller.activity;
 
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.activity.AnswerActivity;
+import com.ck_telecom.caller.activity.CallActivity;
+import com.ck_telecom.caller.activity.ContactsActivity;
 
 public class MainActivity extends AppCompatActivity {
 

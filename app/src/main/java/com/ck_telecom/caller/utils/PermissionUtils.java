@@ -1,4 +1,4 @@
-package com.ck_telecom.caller;
+package com.ck_telecom.caller.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

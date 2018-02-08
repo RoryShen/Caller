@@ -1,8 +1,10 @@
-package com.ck_telecom.caller;
+package com.ck_telecom.caller.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.ck_telecom.caller.R;
 
 public class ContactsActivity extends AppCompatActivity {
 
@@ -11,6 +13,8 @@ public class ContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
     }
+
+
 
     @Override
     public void onBackPressed() {
