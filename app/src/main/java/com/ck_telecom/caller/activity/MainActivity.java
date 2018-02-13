@@ -1,6 +1,7 @@
 package com.ck_telecom.caller.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import com.ck_telecom.caller.activity.CallActivity;
 import com.ck_telecom.caller.activity.ContactsActivity;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static Context mContext;
 
 
 
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mContext=getApplicationContext();
     }
 
     @Override
@@ -49,4 +50,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
         finish();
     }
+
+
 }

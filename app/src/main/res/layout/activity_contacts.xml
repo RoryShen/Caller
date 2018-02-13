@@ -1,92 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.ck_telecom.caller.activity.MainActivity">
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.ck_telecom.caller.activity.MainActivity">
 
     <TextView
-        android:id="@+id/top_Notes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="You can add contacts in this page." />
+            android:id="@+id/top_Notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You can add contacts in this page."/>
 
     <TextView
-        android:id="@+id/tv_an_total_num"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="联系人数量:"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/top_Notes" />
+            android:id="@+id/tv_an_total_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="联系人数量:"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/top_Notes"/>
 
     <TextView
-        android:id="@+id/tv_baseChar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:text="基础字符："
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/tv_an_total_num" />
+            android:id="@+id/tv_baseChar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="姓名："
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_an_total_num"/>
 
-    <CheckBox
-        android:id="@+id/ck_UpChar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="true"
-        android:text="大写字母"
-        app:layout_constraintStart_toEndOf="@id/tv_baseChar"
-        app:layout_constraintTop_toBottomOf="@id/tv_an_total_num" />
+    <RadioGroup
+            android:id="@+id/nameType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_an_total_num"
+            app:layout_constraintLeft_toRightOf="@id/tv_baseChar">
+        <RadioButton
+                android:id="@+id/ck_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="随机"
+        />
+        <RadioButton
+                android:id="@+id/ck_UpChar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="大写"
 
-    <CheckBox
-        android:id="@+id/ck_LowerChar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="小写字母"
-        app:layout_constraintStart_toEndOf="@id/ck_UpChar"
-        app:layout_constraintTop_toBottomOf="@id/tv_an_total_num" />
+        />
 
-    <CheckBox
-        android:id="@+id/ck_Chinese"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="中文"
-        app:layout_constraintStart_toStartOf="@id/ck_UpChar"
-        app:layout_constraintTop_toBottomOf="@id/ck_UpChar" />
+        <RadioButton
+                android:id="@+id/ck_LowerChar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="小写"
+        />
 
-    <CheckBox
-        android:id="@+id/ck_chars"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="符号"
-        app:layout_constraintStart_toStartOf="@id/ck_LowerChar"
-        app:layout_constraintTop_toBottomOf="@id/ck_LowerChar" />
+        <RadioButton
+                android:id="@+id/ck_Chinese"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="中文"
+        />
+
+        <RadioButton
+                android:id="@+id/ck_chars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="符号"
+        />
+
+    </RadioGroup>
+
 
     <TextView
-        android:id="@+id/tv_newContactsNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="插入数量："
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@id/et_new_Contacts_number"
-        app:layout_constraintEnd_toStartOf="@id/et_new_Contacts_number"
-        app:layout_constraintTop_toTopOf="@id/et_new_Contacts_number" />
+            android:id="@+id/tv_newContactsNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="插入数量："
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintHorizontal_weight="0.3"
+            app:layout_constraintBottom_toBottomOf="@id/et_new_Contacts_number"
+            app:layout_constraintEnd_toStartOf="@id/et_new_Contacts_number"
+            app:layout_constraintTop_toTopOf="@id/et_new_Contacts_number"/>
 
     <EditText
-        android:id="@+id/et_new_Contacts_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="请输入要插入的联系人数量"
-        android:inputType="number"
-        app:layout_constraintRight_toLeftOf="@id/et_new_Contacts_number"
-        app:layout_constraintTop_toBottomOf="@+id/ck_Chinese" />
+            android:id="@+id/et_new_Contacts_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入要插入的联系人数量"
+            android:inputType="number"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toEndOf="@id/tv_newContactsNumber"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@id/nameType"/>
 
     <Button
-        android:id="@+id/bt_insert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="插入"
-        app:layout_constraintTop_toBottomOf="@id/et_new_Contacts_number"/>
+            android:id="@+id/bt_insert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="插入"
+
+
+
+            app:layout_constraintTop_toBottomOf="@id/et_new_Contacts_number"/>
 </android.support.constraint.ConstraintLayout>
 
 
