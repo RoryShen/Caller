@@ -53,6 +53,7 @@ public class ContactsConfig {
     public static final String ADDRESS_ITEM_TYPE = ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE;
     public static final String ADDRESS_COUNTRY = ContactsContract.CommonDataKinds.StructuredPostal.COUNTRY;
     public static final String ADDRESS_CITY = ContactsContract.CommonDataKinds.StructuredPostal.CITY;
+    public static final String ADDRESS_STREET = ContactsContract.CommonDataKinds.StructuredPostal.STREET;
 
     public static final String NOTE_ITEM_TYPE = ContactsContract.CommonDataKinds.Note.CONTENT_ITEM_TYPE;
     public static final String NOTE_DATA = ContactsContract.CommonDataKinds.Note.NOTE;

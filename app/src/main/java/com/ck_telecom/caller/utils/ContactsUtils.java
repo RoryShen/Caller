@@ -5,10 +5,9 @@ import com.ck_telecom.caller.config.BaseConfig;
 import com.ck_telecom.caller.config.ContactsConfig;
 
 import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
-import android.content.ContentResolver;
 import android.content.OperationApplicationException;
 import android.os.RemoteException;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -35,35 +34,49 @@ public class ContactsUtils {
      */
 
     public static void addNewContact(String name, String phone, String email, String address, String notes) {
+
+        //empty info check.
         boolean hasEmail = TextUtils.isEmpty(email);
         boolean hasAddress = TextUtils.isEmpty(address);
         boolean hasName = TextUtils.isEmpty(name);
         boolean hasNotes = TextUtils.isEmpty(notes);
         boolean hasPhone = TextUtils.isEmpty(phone);
+        Log.d("AddContacts", "Name:" + name);
+        Log.d("AddContacts", "Email:" + email);
+        Log.d("AddContacts", "Phone:" + phone);
+        Log.d("AddContacts", "address:" + address);
+        Log.d("AddContacts", "Notes:" + notes);
+        Log.d("AddContacts", "HasName:" + hasName + ",hasEmail:"
+                + hasEmail + ",HaseAddres:" + hasAddress + ",HasNotes:" + hasNotes + ",HasPhone:" + hasPhone);
 
         //Check the basic info.
         if (hasName) {
             throw new IllegalArgumentException("Name can not be empty!");
         } else if (!phone.matches("[\\+0-9\\-]*")) {
             throw new IllegalArgumentException("Please check you phone number!" + phone);
-        } else if (!hasEmail && !email.matches("^(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w{2,}+){1,}+)$")) {
+        } else if (!hasEmail && !email.matches("^(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w{2,}+)+)$")) {
             throw new IllegalArgumentException("Please check you email address!" + email);
         }
 
-        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-        ContentProviderOperation operation = null;
 
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+        ContentProviderOperation.Builder operation;
+
+        //Insert a new id.
         operation = ContentProviderOperation
-                .newInsert(ContactsConfig.RAW_CONTACTS_URI).withValue(ContactsConfig.ACCOUNT_TYPE, "com.android.localphone")
-                .withValue(ContactsConfig.ACCOUNT_NAME, "PHONE").build();
-        operations.add(operation);
+                .newInsert(ContactsConfig.RAW_CONTACTS_URI)
+                .withValue(ContactsConfig.ACCOUNT_TYPE, null)
+                .withValue(ContactsConfig.ACCOUNT_NAME, null);
+        operations.add(operation.build());
+
+
         //Add contacts name to database.
-        operation = ContentProviderOperation.newInsert(ContactsConfig.RAW_CONTACTS_URI).
+
+        operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI).
                 withValueBackReference(ContactsConfig.RAW_CONTACT_ID, 0)
                 .withValue(ContactsConfig.MIMETYPE, ContactsConfig.NAME_ITEM_TYPE)
-                .withValue(ContactsConfig.DISPLAY_NAME, name).build();
-        operations.add(operation);
-
+                .withValue(ContactsConfig.DISPLAY_NAME, name).build());
+        Log.d("AddContacts", name);
 
         //If email is not empty insert email.
         if (!hasEmail) {
@@ -72,44 +85,55 @@ public class ContactsUtils {
                     .withValueBackReference(ContactsConfig.RAW_CONTACT_ID, 0)
                     .withValue(ContactsConfig.MIMETYPE, ContactsConfig.EMAIL_ITEM_TYPE)
                     .withValue(ContactsConfig.EMAIL_TYPE, ContactsConfig.EMAIL_TYPE_HOME)
-                    .withValue(ContactsConfig.EMAIL_DATA, email).build();
-            operations.add(operation);
-
+                    .withValue(ContactsConfig.EMAIL_DATA, email);
+            operations.add(operation.build());
+            Log.d("AddContacts", email);
             //Insert phone.
-        } else if (!hasPhone) {
+        }
+
+        //Insert phone.
+        if (!hasPhone) {
 
             operation = ContentProviderOperation.newInsert(ContactsConfig.DATA_URI)
                     .withValueBackReference(ContactsConfig.RAW_CONTACT_ID, 0)
                     .withValue(ContactsConfig.MIMETYPE, ContactsConfig.PHONE_ITEM_TYPE)
-                    .withValue(ContactsConfig.PHONE_TYPE, ContactsConfig.PHONE_TYPE_MOBILE)
-                    .withValue(ContactsConfig.PHONE_NUMBER, phone).build();
-            operations.add(operation);
-
+                    .withValue(ContactsConfig.PHONE_NUMBER, phone)
+                    .withValue(ContactsConfig.PHONE_TYPE, ContactsConfig.PHONE_TYPE_MOBILE);
+            operations.add(operation.build());
+            Log.d("AddContacts", phone);
             //Insert Address.
-        } else if (!hasAddress) {
+        }
+
+        //Insert address.
+        if (!hasAddress) {
 
 
             operation = ContentProviderOperation.newInsert(ContactsConfig.DATA_URI)
                     .withValueBackReference(ContactsConfig.RAW_CONTACT_ID, 0)
                     .withValue(ContactsConfig.MIMETYPE, ContactsConfig.ADDRESS_ITEM_TYPE)
-                    .withValue(ContactsConfig.ADDRESS_CITY, address)
-                    .withValue(ContactsConfig.ADDRESS_COUNTRY, "China").build();
-            operations.add(operation);
-
+//                    .withValue(ContactsConfig.ADDRESS_CITY, "SiChuan")
+//                    .withValue(ContactsConfig.ADDRESS_COUNTRY,"China")
+                    .withValue(ContactsConfig.ADDRESS_STREET, address);
+            operations.add(operation.build());
+            Log.d("AddContacts", address);
             //Insert notes.
-        } else if (!hasNotes) {
+        }
+
+        //Insert notes.
+        if (!hasNotes) {
 
             operation = ContentProviderOperation.newInsert(ContactsConfig.DATA_URI)
                     .withValueBackReference(ContactsConfig.RAW_CONTACT_ID, 0)
                     .withValue(ContactsConfig.MIMETYPE, ContactsConfig.NOTE_ITEM_TYPE)
-                    .withValue(ContactsConfig.NOTE_DATA, notes).build();
-            operations.add(operation);
+                    .withValue(ContactsConfig.NOTE_DATA, notes);
+            operations.add(operation.build());
+            Log.d("AddContacts", notes);
         }
 
 
         try {
-            ContentResolver resolver = MainActivity.mContext.getContentResolver();
-            ContentProviderResult[] results = resolver.applyBatch(ContactsConfig.AUTHORITY, operations);
+            MainActivity.mContext.getContentResolver().applyBatch(ContactsConfig.AUTHORITY, operations);
+
 
         } catch (RemoteException | OperationApplicationException e) {
             e.printStackTrace();

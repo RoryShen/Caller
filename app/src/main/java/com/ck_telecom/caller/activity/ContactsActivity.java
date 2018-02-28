@@ -6,8 +6,12 @@ import com.ck_telecom.caller.config.ContactsConfig;
 import com.ck_telecom.caller.utils.BaseUtils;
 import com.ck_telecom.caller.utils.ContactsUtils;
 
+import android.content.ContentProviderOperation;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,7 +20,9 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-public class ContactsActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class ContactsActivity extends AppCompatActivity implements View.OnClickListener {
     String baseString;
     Button btInsert;
 
@@ -40,7 +46,9 @@ public class ContactsActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
+
                         ContactsUtils.addNewContact(name, phone, email, address, notes);
+                        //test();
                         Toast.makeText(ContactsActivity.this, "Test", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -99,5 +107,52 @@ public class ContactsActivity extends AppCompatActivity {
 
     };
 
+    public void test() {
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+        ContentProviderOperation.Builder builder = null;
+        int rawContactIndex = 0;
+        builder = ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI);
+        builder.withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null);
+        builder.withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null);
 
+        ops.add(builder.build());
+
+        //add phone number
+
+        builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
+        builder.withValueBackReference(ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID,
+                rawContactIndex);
+        builder.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+        builder.withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+        builder.withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, "10086");
+        // builder.withValue(ContactsContract.Data.IS_PRIMARY, 1);
+        ops.add(builder.build());
+
+
+        try {
+            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private void initView() {
+        final String charsContent = ContactsConfig.CHARS_SYMBOLS;
+        final String charsChinese = ContactsConfig.CHARS_CHINESE;
+        final String charsLowerChar = ContactsConfig.CHARS_LOWER_CHAR;
+        final String CharsUpChar = ContactsConfig.CHARS_UP_CHAR;
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        //radioGroup = (RadioGroup) findViewById(R.id.radio_group);
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 }
