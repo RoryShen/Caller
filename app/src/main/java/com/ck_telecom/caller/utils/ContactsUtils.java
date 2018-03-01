@@ -5,11 +5,13 @@ import com.ck_telecom.caller.config.BaseConfig;
 import com.ck_telecom.caller.config.ContactsConfig;
 
 import android.content.ContentProviderOperation;
+import android.content.Context;
 import android.content.OperationApplicationException;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,7 +35,7 @@ public class ContactsUtils {
      * @return if insert return true, else return false.
      */
 
-    public static void addNewContact(String name, String phone, String email, String address, String notes) {
+    public static void addNewContact(String name, String phone, String email, String address, String notes) throws IllegalArgumentException {
 
         //empty info check.
         boolean hasEmail = TextUtils.isEmpty(email);
@@ -49,14 +51,7 @@ public class ContactsUtils {
         Log.d("AddContacts", "HasName:" + hasName + ",hasEmail:"
                 + hasEmail + ",HaseAddres:" + hasAddress + ",HasNotes:" + hasNotes + ",HasPhone:" + hasPhone);
 
-        //Check the basic info.
-        if (hasName) {
-            throw new IllegalArgumentException("Name can not be empty!");
-        } else if (!phone.matches("[\\+0-9\\-]*")) {
-            throw new IllegalArgumentException("Please check you phone number!" + phone);
-        } else if (!hasEmail && !email.matches("^(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w{2,}+)+)$")) {
-            throw new IllegalArgumentException("Please check you email address!" + email);
-        }
+
 
 
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
@@ -71,12 +66,14 @@ public class ContactsUtils {
 
 
         //Add contacts name to database.
+        if (!hasName) {
+            operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI).
+                    withValueBackReference(ContactsConfig.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsConfig.MIMETYPE, ContactsConfig.NAME_ITEM_TYPE)
+                    .withValue(ContactsConfig.DISPLAY_NAME, name).build());
+            Log.d("AddContacts", name);
+        }
 
-        operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI).
-                withValueBackReference(ContactsConfig.RAW_CONTACT_ID, 0)
-                .withValue(ContactsConfig.MIMETYPE, ContactsConfig.NAME_ITEM_TYPE)
-                .withValue(ContactsConfig.DISPLAY_NAME, name).build());
-        Log.d("AddContacts", name);
 
         //If email is not empty insert email.
         if (!hasEmail) {
