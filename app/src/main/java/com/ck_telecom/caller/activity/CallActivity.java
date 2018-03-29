@@ -87,15 +87,15 @@ public class CallActivity extends Activity {
         // 缺少权限时, 进入权限配置页面
         if (mPermissionsChecker.hasPermissions(PERMISSIONS)) {
             AlertDialog.Builder mBuilderNotes = new AlertDialog.Builder(this);
-            mBuilderNotes.setTitle("权限缺失");
-            mBuilderNotes.setMessage("需要开启电话权限才能正常使用功能哦！");
-            mBuilderNotes.setPositiveButton("开启", new DialogInterface.OnClickListener() {
+            mBuilderNotes.setTitle("权限不足");
+            mBuilderNotes.setMessage("需要开启权限才能正常使用功能哦！");
+            mBuilderNotes.setPositiveButton("现在开启", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     startPermissionsActivity();
                 }
             });
-            mBuilderNotes.setNegativeButton("算了", new DialogInterface.OnClickListener() {
+            mBuilderNotes.setNegativeButton("我放弃！", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     finish();

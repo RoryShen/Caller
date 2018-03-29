@@ -196,7 +196,7 @@ public class CallService extends Service {
         private final WeakReference<CallService> mActivity;
 
         public MyHandler(CallService activity) {
-            mActivity = new WeakReference<CallService>(activity);
+            mActivity = new WeakReference<>(activity);
         }
 
         @Override

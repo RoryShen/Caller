@@ -11,6 +11,7 @@ import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -169,6 +170,26 @@ public class ContactsUtils {
         Log.d(BaseConfig.TAG, "New phone is:" + phone);
         return phone;
 
+    }
+
+    /**
+     * Set the radio button status to disable.
+     * @param radioGroup
+     */
+    public static void disableRadioGroup(RadioGroup radioGroup) {
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            radioGroup.getChildAt(i).setEnabled(false);
+        }
+    }
+
+    /**
+     * Set the radio button status to disable.
+     * @param radioGroup
+     */
+    public static  void enableRadioGroup(RadioGroup radioGroup) {
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            radioGroup.getChildAt(i).setEnabled(true);
+        }
     }
 }
 
