@@ -14,30 +14,40 @@
             android:text="You can add contacts in this page."/>
 
     <TextView
-            android:id="@+id/tv_an_total_num"
+            android:id="@+id/tv_an_total_not"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="联系人数量:"
-            android:textSize="18sp"
+            android:textSize="25sp"
             android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@id/top_Notes"/>
+    <TextView
+            android:id="@+id/tv_an_total_contacts_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="25sp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/top_Notes"
+            app:layout_constraintLeft_toRightOf="@id/tv_an_total_not"
+    />
 
     <TextView
             android:id="@+id/tv_baseChar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="25dp"
             android:text="姓名："
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@id/tv_an_total_num"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_an_total_not"/>
 
     <RadioGroup
             android:id="@+id/nameType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_an_total_num"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_an_total_not"
             app:layout_constraintLeft_toRightOf="@id/tv_baseChar">
         <RadioButton
                 android:id="@+id/ck_max"
@@ -97,7 +107,7 @@
             android:layout_height="wrap_content"
             android:hint="请输入要插入的联系人数量"
             android:inputType="number"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintStart_toEndOf="@id/tv_newContactsNumber"
             app:layout_constraintEnd_toEndOf="parent"
 
@@ -114,6 +124,7 @@
             android:id="@+id/pr_process"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/bt_insert"
 
     />

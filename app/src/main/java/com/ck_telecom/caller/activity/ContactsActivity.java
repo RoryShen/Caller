@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -44,11 +44,12 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     private Message message;
     private Handler mHandler;
     private SharedPreferences mSharedPreferences;
+    private static TextView tvTotal;
 
     private static final int REQUEST_CODE = 0; // 请求码
     // 所需的全部权限
     static final String[] PERMISSIONS = new String[]{
-            Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_CONTACTS
+            Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS
     };
 
     @Override
@@ -72,6 +73,11 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         if (radioGroup != null) {
             radioGroup = null;
         }
+        if (tvTotal != null) {
+            tvTotal = null;
+        }
+
+
     }
 
     @Override
@@ -82,20 +88,10 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
 
     }
-    private void startPermissionsActivity() {
-        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);
-    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
-        if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
-            finish();
-        }
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         // 缺少权限时, 进入权限配置页面
         if (mPermissionsChecker.hasPermissions(PERMISSIONS)) {
             AlertDialog.Builder mBuilderNotes = new AlertDialog.Builder(this);
@@ -118,7 +114,27 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
             mBuilderNotes.show();
 
         }
+    }
+
+    private void startPermissionsActivity() {
+        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
+        if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
+            finish();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // ContactsUtils.deleteAllContacts();
         initView();
+
         mSharedPreferences = getSharedPreferences("InsertContacts", MODE_PRIVATE);
         boolean isInsert = mSharedPreferences.getBoolean("Inserting", false);
         String insertNumber = mSharedPreferences.getString("contactsNumber", "");
@@ -132,6 +148,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
             radioGroup.setEnabled(false);
             ContactsUtils.disableRadioGroup(radioGroup);
             progressBar.setMax(totalContacts);
+            progressBar.setVisibility(View.VISIBLE);
 
         }
     }
@@ -153,10 +170,9 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         etNumber = findViewById(R.id.et_new_Contacts_number);
         progressBar = findViewById(R.id.pr_process);
         mRadioMax = findViewById(R.id.ck_max);
-
+        tvTotal = findViewById(R.id.tv_an_total_contacts_num);
         mRadioMax.setChecked(true);
-
-
+        tvTotal.setText(ContactsUtils.getContactsNumber() + "");
     }
 
     @Override
@@ -179,6 +195,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                     } else {
                         int totalContacts = Integer.parseInt(etNumber.getText().toString());
                         Toast.makeText(this, "正在进行数据插入，请稍后！", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.VISIBLE);
                         progressBar.setMax(totalContacts);
                         progressBar.setProgress(0);
                         Log.i("RDebug", "startHandler");
@@ -193,7 +210,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                         editor.putBoolean("Inserting", insertContacts);
                         editor.putInt("AllContacts", totalContacts);
                         editor.apply();
-                        progressBar.setVisibility(View.VISIBLE);
+
                     }
 
 
@@ -242,30 +259,23 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         // create base string, default value is random string.
-        if (!TextUtils.isEmpty(baseString)) {
-            baseString = "";
-        }
-        if (mRadioMax.isChecked()) {
-            baseString = charsContent + charsChinese + CharsUpChar + charsLowerChar;
-        } else {
-            switch (checkedId) {
-                case R.id.ck_chars:
-                    baseString = charsContent;
+        switch (checkedId) {
+            case R.id.ck_chars:
+                baseString = charsContent;
 
-                    break;
-                case R.id.ck_Chinese:
-                    baseString = charsChinese;
-                    break;
-                case R.id.ck_LowerChar:
-                    baseString = charsLowerChar;
-                    break;
-                case R.id.ck_UpChar:
-                    baseString = CharsUpChar;
-                    break;
-                default:
-                    baseString = charsContent + charsChinese + CharsUpChar + charsLowerChar;
+                break;
+            case R.id.ck_Chinese:
+                baseString = charsChinese;
+                break;
+            case R.id.ck_LowerChar:
+                baseString = charsLowerChar;
+                break;
+            case R.id.ck_UpChar:
+                baseString = CharsUpChar;
+                break;
+            default:
+                baseString = charsContent + charsChinese + CharsUpChar + charsLowerChar;
 
-            }
         }
 
 
@@ -289,6 +299,8 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                     radioGroup.setEnabled(true);
                     ContactsUtils.enableRadioGroup(radioGroup);
                     Toast.makeText(getApplicationContext(), "插入完成!", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    tvTotal.setText(ContactsUtils.getContactsNumber() + "");
                     progressBar.setProgress(contacts);
                     SharedPreferences.Editor editor = mSharedPreferences.edit();
                     editor.putString("contactsNumber", "");

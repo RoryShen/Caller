@@ -1,8 +1,9 @@
-package com.ck_telecom.caller.utils;
+package com.ck_telecom.caller;
 
 import com.ck_telecom.caller.activity.MainActivity;
 import com.ck_telecom.caller.config.BaseConfig;
 import com.ck_telecom.caller.config.ContactsConfig;
+import com.ck_telecom.caller.utils.BaseUtils;
 
 import android.content.ContentProviderOperation;
 import android.content.OperationApplicationException;

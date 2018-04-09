@@ -29,7 +29,7 @@ android {
             signingConfig signingConfigs.config
         }
     }
-    buildToolsVersion '27.0.0'
+    buildToolsVersion '27.0.1'
 }
 
 dependencies {
@@ -39,4 +39,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'org.xutils:xutils:3.5.0'
 }
