@@ -215,7 +215,8 @@ public class ContactsUtils {
      */
     public static boolean deleteAllContacts() {
         //Get all contacts number.
-        Cursor cursor = MainActivity.mContext.getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, new String[]{ContactsContract.RawContacts._ID}, ContactsContract.RawContacts.DELETED + "=?", new String[]{"0"}, null);
+        //Cursor cursor = MainActivity.mContext.getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, new String[]{ContactsContract.RawContacts._ID}, ContactsContract.RawContacts.DELETED + "=?", new String[]{"0"}, null);
+        Cursor cursor = MainActivity.mContext.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
         int id = 0;
         int contactsId;
         boolean result = false;

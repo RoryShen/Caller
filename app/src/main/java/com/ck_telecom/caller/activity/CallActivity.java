@@ -85,7 +85,7 @@ public class CallActivity extends Activity {
     protected void onResume() {
         super.onResume();
         // 缺少权限时, 进入权限配置页面
-        if (mPermissionsChecker.hasPermissions(PERMISSIONS)) {
+        if (!mPermissionsChecker.hasPermissions(PERMISSIONS)) {
             AlertDialog.Builder mBuilderNotes = new AlertDialog.Builder(this);
             mBuilderNotes.setTitle("权限不足");
             mBuilderNotes.setMessage("需要开启权限才能正常使用功能哦！");

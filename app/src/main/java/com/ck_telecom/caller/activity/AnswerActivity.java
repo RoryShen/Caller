@@ -66,7 +66,7 @@ public class AnswerActivity extends Activity {
 
         super.onResume();
         // 缺少权限时, 进入权限配置页面
-        if (mPermissionsChecker.hasPermissions(PERMISSIONS)) {
+        if (!mPermissionsChecker.hasPermissions(PERMISSIONS)) {
             AlertDialog.Builder mBuilderNotes = new AlertDialog.Builder(this);
             mBuilderNotes.setTitle("权限缺失");
             mBuilderNotes.setMessage("需要开启电话权限才能正常使用功能哦！");

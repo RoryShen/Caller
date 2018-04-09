@@ -89,11 +89,27 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+
+
+    private void startPermissionsActivity() {
+        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);
+    }
+
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
+        if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
+            finish();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         // 缺少权限时, 进入权限配置页面
-        if (mPermissionsChecker.hasPermissions(PERMISSIONS)) {
+        if (!mPermissionsChecker.hasPermissions(PERMISSIONS)) {
             AlertDialog.Builder mBuilderNotes = new AlertDialog.Builder(this);
             mBuilderNotes.setTitle("权限不足");
             mBuilderNotes.setMessage("进行联系人填充，需要先开启联系人读写权限的哦！");
@@ -113,44 +129,12 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
             });
             mBuilderNotes.show();
 
-        }
-    }
-
-    private void startPermissionsActivity() {
-        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
-        if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
-            finish();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // ContactsUtils.deleteAllContacts();
-        initView();
-
-        mSharedPreferences = getSharedPreferences("InsertContacts", MODE_PRIVATE);
-        boolean isInsert = mSharedPreferences.getBoolean("Inserting", false);
-        String insertNumber = mSharedPreferences.getString("contactsNumber", "");
-        int totalContacts = mSharedPreferences.getInt("AllContacts", 0);
-
-
-        if (isInsert) {
-            btInsert.setEnabled(false);
-            etNumber.setEnabled(false);
-            etNumber.setText(insertNumber);
-            radioGroup.setEnabled(false);
-            ContactsUtils.disableRadioGroup(radioGroup);
-            progressBar.setMax(totalContacts);
-            progressBar.setVisibility(View.VISIBLE);
+        }else{
+            initView();
 
         }
+
+
     }
 
     @Override
@@ -172,7 +156,24 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         mRadioMax = findViewById(R.id.ck_max);
         tvTotal = findViewById(R.id.tv_an_total_contacts_num);
         mRadioMax.setChecked(true);
+
         tvTotal.setText(ContactsUtils.getContactsNumber() + "");
+        mSharedPreferences = getSharedPreferences("InsertContacts", MODE_PRIVATE);
+        boolean isInsert = mSharedPreferences.getBoolean("Inserting", false);
+        String insertNumber = mSharedPreferences.getString("contactsNumber", "");
+        int totalContacts = mSharedPreferences.getInt("AllContacts", 0);
+
+
+        if (isInsert) {
+            btInsert.setEnabled(false);
+            etNumber.setEnabled(false);
+            etNumber.setText(insertNumber);
+            radioGroup.setEnabled(false);
+            ContactsUtils.disableRadioGroup(radioGroup);
+            progressBar.setMax(totalContacts);
+            progressBar.setVisibility(View.VISIBLE);
+
+        }
     }
 
     @Override

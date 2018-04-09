@@ -57,7 +57,7 @@ public class InComingCallService extends Service {
         Log.i("InComingCall", "InComingCall Service start!");
         inComingNumber = intent.getStringExtra("phone");
         time = intent.getIntExtra("frequency", 30);
-        Log.e("Phone", inComingNumber);
+        Log.i("RDebug", "InComing number is:" + inComingNumber);
         Toast.makeText(InComingCallService.this, "自动接听设置成功，当前监听号码为：" + inComingNumber, Toast.LENGTH_SHORT).show();
         getIncomingCall();
         total.findViewById(R.id.tv_an_total_num);
@@ -84,17 +84,19 @@ public class InComingCallService extends Service {
             super.onCallStateChanged(state, incomingNumber);
             switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING:
+                    Log.i("RDebug", "InComing number is:" + incomingNumber);
                     //Toast.makeText(InComingCallService.this, "来电号码是：" + incomingNumber, Toast.LENGTH_SHORT).show();
                     if (inComingNumber.equals(incomingNumber)) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                             telecomManager.acceptRingingCall();
                             total.setText(sum + "");
+                            Log.i("RDebug_O", "InComing number is:" + sum);
                         } else {
 
                             answerRingingCall(getApplicationContext());
                             sum = sum + 1;
-                            Log.i("InComing", sum + "");
+                            Log.i("RDebug", "InComing number is:" + sum);
                             total.setText(sum + "");
                             //Toast.makeText(getAnswerActivity(), sum + "", Toast.LENGTH_SHORT).show();
                         }

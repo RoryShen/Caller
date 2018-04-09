@@ -58,7 +58,7 @@ public class PermissionsActivity extends AppCompatActivity {
         super.onResume();
         if (isRequireCheck) {
             String[] permissions = getPermissions();
-            if (mChecker.hasPermissions(permissions)) {
+            if (!mChecker.hasPermissions(permissions)) {
                 requestPermissions(permissions); // 请求权限
             } else {
                 allPermissionsGranted(); // 全部权限都已获取

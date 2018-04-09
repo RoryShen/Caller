@@ -26,6 +26,6 @@ public class PermissionUtils {
 
     //Check the permission.
     private boolean hasPermission(String permission) {
-        return ContextCompat.checkSelfPermission(mContext, permission) == PackageManager.PERMISSION_DENIED;
+        return ContextCompat.checkSelfPermission(mContext, permission) == PackageManager.PERMISSION_GRANTED;
     }
 }
