@@ -43,13 +43,13 @@ public class ContactsUtils {
         boolean hasName = TextUtils.isEmpty(name);
         boolean hasNotes = TextUtils.isEmpty(notes);
         boolean hasPhone = TextUtils.isEmpty(phone);
-        Log.d("AddContacts", "Name:" + name);
-        Log.d("AddContacts", "Email:" + email);
-        Log.d("AddContacts", "Phone:" + phone);
-        Log.d("AddContacts", "address:" + address);
-        Log.d("AddContacts", "Notes:" + notes);
-        Log.d("AddContacts", "HasName:" + hasName + ",hasEmail:"
-                + hasEmail + ",HaseAddres:" + hasAddress + ",HasNotes:" + hasNotes + ",HasPhone:" + hasPhone);
+//        Log.d("AddContacts", "Name:" + name);
+//        Log.d("AddContacts", "Email:" + email);
+//        Log.d("AddContacts", "Phone:" + phone);
+//        Log.d("AddContacts", "address:" + address);
+//        Log.d("AddContacts", "Notes:" + notes);
+//        Log.d("AddContacts", "HasName:" + hasName + ",hasEmail:"
+//                + hasEmail + ",HaseAddres:" + hasAddress + ",HasNotes:" + hasNotes + ",HasPhone:" + hasPhone);
 
 
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
@@ -69,7 +69,7 @@ public class ContactsUtils {
                     withValueBackReference(ContactsConfig.RAW_CONTACT_ID, 0)
                     .withValue(ContactsConfig.MIMETYPE, ContactsConfig.NAME_ITEM_TYPE)
                     .withValue(ContactsConfig.DISPLAY_NAME, name).build());
-            Log.d("AddContacts", name);
+            //Log.d("AddContacts", name);
         }
 
 
@@ -82,7 +82,7 @@ public class ContactsUtils {
                     .withValue(ContactsConfig.EMAIL_TYPE, ContactsConfig.EMAIL_TYPE_HOME)
                     .withValue(ContactsConfig.EMAIL_DATA, email);
             operations.add(operation.build());
-            Log.d("AddContacts", email);
+           // Log.d("AddContacts", email);
             //Insert phone.
         }
 
@@ -95,7 +95,7 @@ public class ContactsUtils {
                     .withValue(ContactsConfig.PHONE_NUMBER, phone)
                     .withValue(ContactsConfig.PHONE_TYPE, ContactsConfig.PHONE_TYPE_MOBILE);
             operations.add(operation.build());
-            Log.d("AddContacts", phone);
+           // Log.d("AddContacts", phone);
             //Insert Address.
         }
 
@@ -110,7 +110,7 @@ public class ContactsUtils {
 //                    .withValue(ContactsConfig.ADDRESS_COUNTRY,"China")
                     .withValue(ContactsConfig.ADDRESS_STREET, address);
             operations.add(operation.build());
-            Log.d("AddContacts", address);
+           // Log.d("AddContacts", address);
             //Insert notes.
         }
 
@@ -122,7 +122,7 @@ public class ContactsUtils {
                     .withValue(ContactsConfig.MIMETYPE, ContactsConfig.NOTE_ITEM_TYPE)
                     .withValue(ContactsConfig.NOTE_DATA, notes);
             operations.add(operation.build());
-            Log.d("AddContacts", notes);
+           // Log.d("AddContacts", notes);
         }
 
 
@@ -153,7 +153,7 @@ public class ContactsUtils {
                 .append(BaseUtils.getRandomString(base, length));
 
         String email = builder.toString();
-        Log.d(BaseConfig.TAG, "New Email is:" + email);
+       // Log.d(BaseConfig.TAG, "New Email is:" + email);
         return email;
 
     }
@@ -164,7 +164,7 @@ public class ContactsUtils {
     public static String getRandmPhone(int length) {
         String base = "+-0123456789";
         String phone = BaseUtils.getRandomString(base, length);
-        Log.d(BaseConfig.TAG, "New phone is:" + phone);
+       // Log.d(BaseConfig.TAG, "New phone is:" + phone);
         return phone;
 
     }
@@ -194,8 +194,10 @@ public class ContactsUtils {
      */
     public static int getContactsNumber() {
 
-        Cursor cursor = MainActivity.mContext.getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, null,
-                ContactsContract.RawContacts.DELETED + "=?", new String[]{"0"}, null);
+//        Cursor cursor = MainActivity.mContext.getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, null,
+//                ContactsContract.RawContacts.DELETED + "=?", new String[]{"0"}, null);
+        Cursor cursor = MainActivity.mContext.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null, null);
         int id = 0;
 
         // If record not empty try to get contacts number.
@@ -215,8 +217,8 @@ public class ContactsUtils {
      */
     public static boolean deleteAllContacts() {
         //Get all contacts number.
-        //Cursor cursor = MainActivity.mContext.getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, new String[]{ContactsContract.RawContacts._ID}, ContactsContract.RawContacts.DELETED + "=?", new String[]{"0"}, null);
-        Cursor cursor = MainActivity.mContext.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        Cursor cursor = MainActivity.mContext.getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, new String[]{ContactsContract.RawContacts._ID}, ContactsContract.RawContacts.DELETED + "=?", new String[]{"0"}, null);
+        //Cursor cursor = MainActivity.mContext.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
         int id = 0;
         int contactsId;
         boolean result = false;
@@ -225,14 +227,17 @@ public class ContactsUtils {
             while (cursor.moveToNext()) {
 
                 contactsId = cursor.getInt(0);
-                Log.d("deleteContactsByName", "Try to delete:" + contactsId);
+              //  Log.d("deleteContactsByName", "Try to delete:" + contactsId);
                 MainActivity.mContext.getContentResolver().delete(ContactsContract.RawContacts.CONTENT_URI, ContactsContract.Data._ID + "=?", new String[]{contactsId + ""});
                 ++id;
             }
             result = true;
+            cursor.close();
         }
         return result;
     }
+
+
 }
 
 

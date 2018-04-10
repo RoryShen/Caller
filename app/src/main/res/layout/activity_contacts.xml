@@ -17,7 +17,7 @@
             android:id="@+id/tv_an_total_not"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="联系人数量:"
+            android:text="当前联系人:"
             android:textSize="25sp"
             android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@id/top_Notes"/>
@@ -54,6 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="随机"
+                android:checked="true"
 
         />
         <RadioButton
@@ -119,6 +120,14 @@
             android:layout_height="wrap_content"
             android:text="插入"
             app:layout_constraintTop_toBottomOf="@id/et_new_Contacts_number"/>
+    <Button
+            android:id="@+id/bt_deleteAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清空"
+            app:layout_constraintTop_toBottomOf="@id/et_new_Contacts_number"
+            app:layout_constraintLeft_toRightOf="@id/bt_insert"/>
+
     <ProgressBar
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:id="@+id/pr_process"
