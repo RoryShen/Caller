@@ -33,6 +33,7 @@
 
         <service android:name=".service.InComingCallService" />
         <service android:name=".service.CallService" />
+        <service android:name=".service.ContactService"></service>
 
         <activity android:name=".activity.ContactsActivity"></activity>
 

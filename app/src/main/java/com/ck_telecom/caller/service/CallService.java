@@ -23,10 +23,10 @@ import java.lang.ref.WeakReference;
 
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
 import static android.widget.Toast.LENGTH_SHORT;
-import static com.ck_telecom.caller.activity.CallActivity.getCallActivity;
 import static com.ck_telecom.caller.R.id.et_ca_frequency;
 import static com.ck_telecom.caller.R.id.et_ca_phone_ref_num;
 import static com.ck_telecom.caller.R.id.et_ca_total;
+import static com.ck_telecom.caller.activity.CallActivity.getCallActivity;
 
 /**
  * Created by Rory on 2017/11/16   .
@@ -112,7 +112,6 @@ public class CallService extends Service {
                 Toast.makeText(this, "号码不符合规则,请重新输入", LENGTH_SHORT).show();
 
 
-
             }
         }
 
@@ -190,6 +189,22 @@ public class CallService extends Service {
         Log.e("Service", handlerThread.isAlive() + "HandlerThread");
 
         Log.e("Service", "Service Stoped!");
+        if (tvLog != null) {
+            tvLog = null;
+        }
+        if (tvFail != null) {
+            tvFail = null;
+        }
+        if (etTimes != null) {
+            etTimes = null;
+        }
+        if (etFrequency != null) {
+            etFrequency = null;
+        }
+        if (phone != null) {
+            phone = null;
+        }
+
     }
 
     private class MyHandler extends Handler {

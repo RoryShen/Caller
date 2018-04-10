@@ -1,11 +1,5 @@
 package com.ck_telecom.caller.activity;
 
-import com.ck_telecom.caller.R;
-import com.ck_telecom.caller.config.ContactsConfig;
-import com.ck_telecom.caller.utils.BaseUtils;
-import com.ck_telecom.caller.utils.ContactsUtils;
-import com.ck_telecom.caller.utils.PermissionUtils;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -25,6 +19,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.config.ContactsConfig;
+import com.ck_telecom.caller.service.ContactService;
+import com.ck_telecom.caller.utils.BaseUtils;
+import com.ck_telecom.caller.utils.ContactsUtils;
+import com.ck_telecom.caller.utils.PermissionUtils;
 
 
 public class ContactsActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
@@ -52,7 +53,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     private static boolean isDeleted = false;// is deleting contacts.
     private static boolean insertContacts = false;// is inserting contacts.
     private int insertContactsNumber;// all contacts number.
-    //private boolean needSave = false;
+    private boolean isFirst = false;
 
 
     private static final int REQUEST_CODE = 0; // 请求码
@@ -76,7 +77,12 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onStop() {
+        super.onStop();
         SharedPreferences.Editor editor = mSharedPreferences.edit();
+        boolean init = mSharedPreferences.getBoolean("Init", false);
+        if (!init) {
+            return;
+        }
         insertContactsNumber = Integer.parseInt(etNumber.getText().toString());
 
         editor.putInt("contactsNumber", insertContactsNumber);
@@ -86,8 +92,6 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
         Log.d("RDebug", "OnStop:" + "insertContactsNumber:" + insertContactsNumber +
                 "insertContacts：" + insertContacts + "isDeleted:" + isDeleted);
-
-        super.onStop();
 
 
     }
@@ -167,6 +171,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
     private void startPermissionsActivity() {
         PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);
+
     }
 
     @Override
@@ -175,6 +180,8 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
         if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
             finish();
+        } else {
+            mSharedPreferences.edit().putBoolean("Init", true).apply();
         }
     }
 
@@ -244,6 +251,10 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                         Toast.makeText(this, "当前限制为每次插入500个联系人", Toast.LENGTH_SHORT).show();
                         return;
                     } else {
+                        Intent contactIntent = new Intent(ContactsActivity.this, ContactService.class);
+                        contactIntent.putExtra("InsertNumber", insertContactsNumber);
+                        startService(contactIntent);
+
                         //totalContacts = Integer.parseInt(etNumber.getText().toString());
                         Toast.makeText(this, "正在进行数据插入，请稍后！", Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.VISIBLE);
