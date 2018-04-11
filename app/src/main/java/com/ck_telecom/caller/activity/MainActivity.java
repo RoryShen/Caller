@@ -3,53 +3,64 @@ package com.ck_telecom.caller.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 
 import com.ck_telecom.caller.R;
-import com.ck_telecom.caller.activity.AnswerActivity;
-import com.ck_telecom.caller.activity.CallActivity;
-import com.ck_telecom.caller.activity.ContactsActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static Context mContext;
-
+    private Button mContacts;
+    private Button mAnswer;
+    private Button mDialing;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mContext=getApplicationContext();
+        mContext = getApplicationContext();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        initView();
 
     }
 
+    private void initView() {
+        mContacts = findViewById(R.id.bt_main_contacts);
+        mDialing = findViewById(R.id.bt_main_call);
+        mAnswer = findViewById(R.id.bt_main_answer);
 
 
-    public void answer(View view) {
-        Intent intent = new Intent(this, AnswerActivity.class);
-        startActivityForResult(intent, 1);
-        finish();
-    }
-
-    public void Call(View view) {
-        Intent CallIntent = new Intent(this, CallActivity.class);
-        startActivityForResult(CallIntent, 0);
-        finish();
+        mContacts.setOnClickListener(this);
+        mDialing.setOnClickListener(this);
+        mAnswer.setOnClickListener(this);
     }
 
 
-    public void contacts(View view) {
-        Intent intent = new Intent(this, ContactsActivity.class);
-        startActivityForResult(intent, 1);
-        finish();
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_main_answer:
+                Intent mAnswerIntent = new Intent(this, AnswerActivity.class);
+                startActivityForResult(mAnswerIntent, 1);
+                finish();
+                break;
+            case R.id.bt_main_contacts:
+                Intent mContactsIntent = new Intent(this, ContactsActivity.class);
+                startActivityForResult(mContactsIntent, 1);
+                finish();
+                break;
+            case R.id.bt_main_call:
+                Intent CallIntent = new Intent(this, CallActivity.class);
+                startActivityForResult(CallIntent, 0);
+                finish();
+        }
+
     }
-
-
 }

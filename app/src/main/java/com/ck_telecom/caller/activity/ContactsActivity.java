@@ -45,7 +45,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     private static TextView tvTotal;// For display all contacts number.
     private static TextView tvPercent;//for display process.
     private static ProgressBar prDelete;//delete contacts.
-    private static ImageView sImageView;
+
 
     //Thread
     private static InsertContactsThread insertContactsThread;// label for
@@ -168,9 +168,6 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         if (prDelete != null) {
             prDelete = null;
         }
-        if (sImageView != null) {
-            sImageView = null;
-        }
 
 
     }
@@ -204,14 +201,14 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         tvTotal = findViewById(R.id.tv_an_total_contacts_num);
         tvPercent = findViewById(R.id.tv_percent);
         prDelete = findViewById(R.id.pr_delete);
-        sImageView = findViewById(R.id.iv_ad);
+
 
 
         //Set click listener.
         radioGroup.setOnCheckedChangeListener(this);
         btInsert.setOnClickListener(this);
         btDeleteAll.setOnClickListener(this);
-        sImageView.setOnClickListener(this);
+       // sImageView.setOnClickListener(this);
 
         int insertNumber = mSharedPreferences.getInt("contactsNumber", 0);
         tvTotal.setText(ContactsUtils.getContactsNumber() + "");
@@ -288,9 +285,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                 });
                 mBuilderNotes.setNegativeButton("取消", null);
                 mBuilderNotes.show();
-            case R.id.iv_ad:
 
-                Toast.makeText(getApplicationContext(), "占位符。。。不知道放撒。。。", Toast.LENGTH_SHORT).show();
 
         }
 

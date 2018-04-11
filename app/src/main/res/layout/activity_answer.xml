@@ -69,54 +69,7 @@
         app:layout_constraintBaseline_toBaselineOf="@id/tv_an_total_tag"
         app:layout_constraintLeft_toRightOf="@id/tv_an_total_tag" />
 
-    <!--<TextView-->
-    <!--android:id="@+id/tv_an_pass_tag"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="35dp"-->
-    <!--android:layout_marginLeft="20dp"-->
-    <!--android:maxHeight="40dp"-->
-    <!--android:text="@string/tv_answer_pass"-->
-    <!--android:textAlignment="center"-->
-    <!--android:textSize="25sp"-->
-    <!--app:layout_constraintBaseline_toBaselineOf="@id/tv_an_total_num"-->
-    <!--app:layout_constraintLeft_toRightOf="@id/tv_an_total_num" />-->
 
-    <!--<TextView-->
-    <!--android:id="@+id/tv_an_pass_num"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="35dp"-->
-    <!--android:layout_marginLeft="20dp"-->
-    <!--android:maxHeight="40dp"-->
-    <!--android:text="0"-->
-    <!--android:textAlignment="center"-->
-    <!--android:textSize="25sp"-->
-    <!--app:layout_constraintBaseline_toBaselineOf="@id/tv_an_pass_tag"-->
-    <!--app:layout_constraintLeft_toRightOf="@id/tv_an_pass_tag" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/tv_an_fail_tag"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="35dp"-->
-    <!--android:layout_marginLeft="20dp"-->
-    <!--android:maxHeight="40dp"-->
-    <!--android:text="@string/tv_answer_fail"-->
-    <!--android:textAlignment="center"-->
-    <!--android:textSize="25dp"-->
-    <!--app:layout_constraintBaseline_toBaselineOf="@id/tv_an_pass_num"-->
-    <!--app:layout_constraintLeft_toRightOf="@id/tv_an_pass_num" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/tv_an_fail_num"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="35dp"-->
-    <!--android:layout_marginLeft="20dp"-->
-    <!--android:maxHeight="40dp"-->
-    <!--android:text="0"-->
-    <!--android:textAlignment="center"-->
-    <!--android:textColor="#ff0000"-->
-    <!--android:textSize="25sp"-->
-    <!--app:layout_constraintBaseline_toBaselineOf="@id/tv_an_fail_tag"-->
-    <!--app:layout_constraintLeft_toRightOf="@id/tv_an_fail_tag" />-->
 
     <Button
         android:id="@+id/bt_an_start"
@@ -136,5 +89,10 @@
         android:text="@string/bt_answer_stop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.1"
+        android:background="@drawable/ic_incoming"/>
 
 </android.support.constraint.ConstraintLayout>
