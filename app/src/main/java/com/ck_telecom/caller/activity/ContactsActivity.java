@@ -1,5 +1,11 @@
 package com.ck_telecom.caller.activity;
 
+import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.config.ContactsConfig;
+import com.ck_telecom.caller.utils.BaseUtils;
+import com.ck_telecom.caller.utils.ContactsUtils;
+import com.ck_telecom.caller.utils.PermissionUtils;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,18 +20,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.ck_telecom.caller.R;
-import com.ck_telecom.caller.config.ContactsConfig;
-import com.ck_telecom.caller.service.ContactService;
-import com.ck_telecom.caller.utils.BaseUtils;
-import com.ck_telecom.caller.utils.ContactsUtils;
-import com.ck_telecom.caller.utils.PermissionUtils;
 
 
 public class ContactsActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
@@ -37,23 +37,25 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
     // UI element.
     private static EditText etNumber;// contacts input box.
-    private static ProgressBar progressBar;// display insert progress.
+    private static ProgressBar prAdd;// display insert progress.
     private static RadioButton mRadioMax;// for baseString max.
     private static Button btInsert; // Insert button
     private static RadioGroup radioGroup;// Radio group for choose name char.
     private static Button btDeleteAll;// Delete all contacts button.
     private static TextView tvTotal;// For display all contacts number.
+    private static TextView tvPercent;//for display process.
+    private static ProgressBar prDelete;//delete contacts.
+    private static ImageView sImageView;
 
     //Thread
-    private static Thread InsertContactsThread;// label for
+    private static InsertContactsThread insertContactsThread;// label for
+    private static DeleteContactsThread deleteContactsThread;
 
     //internal label.
     private PermissionUtils mPermissionsChecker; // permission checker.
-    // private static int contacts;//user input contacts number.
-    private static boolean isDeleted = false;// is deleting contacts.
-    private static boolean insertContacts = false;// is inserting contacts.
     private int insertContactsNumber;// all contacts number.
-    private boolean isFirst = false;
+    private boolean hasUpdate = false;
+    private int allContactsNumber;
 
 
     private static final int REQUEST_CODE = 0; // 请求码
@@ -75,23 +77,19 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+
     @Override
     protected void onStop() {
         super.onStop();
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        boolean init = mSharedPreferences.getBoolean("Init", false);
-        if (!init) {
-            return;
+
+        if (hasUpdate) {
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            editor.putInt("contactsNumber", insertContactsNumber);
+            editor.apply();
         }
-        insertContactsNumber = Integer.parseInt(etNumber.getText().toString());
 
-        editor.putInt("contactsNumber", insertContactsNumber);
-        editor.putBoolean("Inserting", insertContacts);
-        editor.putBoolean("isDeleted", isDeleted);
-        editor.apply();
 
-        Log.d("RDebug", "OnStop:" + "insertContactsNumber:" + insertContactsNumber +
-                "insertContacts：" + insertContacts + "isDeleted:" + isDeleted);
+        Log.d("RDebug", "OnStop:" + "insertContactsNumber:" + insertContactsNumber);
 
 
     }
@@ -141,11 +139,11 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     protected void onDestroy() {
         super.onDestroy();
 
-        //清空对象，便于被回收
+        //reset ui element for gc.
         if (etNumber != null) {
             etNumber = null;
         }
-        if (progressBar != null) {
+        if (prAdd != null) {
             etNumber = null;
         }
         if (mRadioMax != null) {
@@ -163,6 +161,15 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         }
         if (btDeleteAll != null) {
             btDeleteAll = null;
+        }
+        if (tvPercent != null) {
+            tvPercent = null;
+        }
+        if (prDelete != null) {
+            prDelete = null;
+        }
+        if (sImageView != null) {
+            sImageView = null;
         }
 
 
@@ -192,36 +199,35 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         btInsert = findViewById(R.id.bt_insert);
         radioGroup = findViewById(R.id.nameType);
         etNumber = findViewById(R.id.et_new_Contacts_number);
-        progressBar = findViewById(R.id.pr_process);
+        prAdd = findViewById(R.id.pr_add);
         mRadioMax = findViewById(R.id.ck_max);
         tvTotal = findViewById(R.id.tv_an_total_contacts_num);
+        tvPercent = findViewById(R.id.tv_percent);
+        prDelete = findViewById(R.id.pr_delete);
+        sImageView = findViewById(R.id.iv_ad);
 
 
         //Set click listener.
         radioGroup.setOnCheckedChangeListener(this);
         btInsert.setOnClickListener(this);
         btDeleteAll.setOnClickListener(this);
+        sImageView.setOnClickListener(this);
 
-
-        //Get insert status.
-
-        boolean isInsert = mSharedPreferences.getBoolean("Inserting", false);
         int insertNumber = mSharedPreferences.getInt("contactsNumber", 0);
-        isDeleted = mSharedPreferences.getBoolean("isDeleted", false);
         tvTotal.setText(ContactsUtils.getContactsNumber() + "");
-        Log.d("RDebug", "Start:" + "Insert Number:" + insertNumber + "isInsert:" + isInsert + "IsDeleted:" + isDeleted);
-        if (isInsert) {
-            etNumber.setText(insertNumber + "");
-            progressBar.setVisibility(View.VISIBLE);
-            progressBar.setMax(insertNumber);
+        etNumber.setText(insertNumber + "");
+        //Get insert status.
+        if (null != insertContactsThread && insertContactsThread.isAlive()) {
+
+            prAdd.setVisibility(View.VISIBLE);
+            tvPercent.setVisibility(View.VISIBLE);
+            prAdd.setMax(insertNumber);
             disableUiElement();
-
-
-        } else if (isDeleted) {
-
-            etNumber.setText(insertNumber + "");
+        } else if (null != deleteContactsThread && deleteContactsThread.isAlive()) {
             disableUiElement();
+            prDelete.setVisibility(View.VISIBLE);
         }
+
     }
 
     @Override
@@ -232,55 +238,38 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
 
             case R.id.bt_insert:
-                if (insertContacts) {
-                    Toast.makeText(this, "当前有操作还未完成，请等待！", Toast.LENGTH_SHORT).show();
 
+                if (TextUtils.isEmpty(etNumber.getText().toString()) || Integer.valueOf(etNumber.getText().toString()) == 0) {
+                    Toast.makeText(this, "请输入要插入联系人的数量！", Toast.LENGTH_SHORT).show();
+                    return;
 
                 } else {
-                    if (TextUtils.isEmpty(etNumber.getText().toString()) || Integer.valueOf(etNumber.getText().toString()) == 0) {
-                        Toast.makeText(this, "请输入要插入联系人的数量！", Toast.LENGTH_SHORT).show();
-                        return;
+                    insertContactsNumber = Integer.valueOf(etNumber.getText().toString());
+                }
+                if (insertContactsNumber > 500) {
+                    Toast.makeText(this, "当前限制为每次插入500个联系人", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
 
-                    } else {
-                        insertContactsNumber = Integer.valueOf(etNumber.getText().toString());
-
-                    }
-
-
-                    if (insertContactsNumber > 500) {
-                        Toast.makeText(this, "当前限制为每次插入500个联系人", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        Intent contactIntent = new Intent(ContactsActivity.this, ContactService.class);
-                        contactIntent.putExtra("InsertNumber", insertContactsNumber);
-                        startService(contactIntent);
-
-                        //totalContacts = Integer.parseInt(etNumber.getText().toString());
-                        Toast.makeText(this, "正在进行数据插入，请稍后！", Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.VISIBLE);
-                        progressBar.setMax(insertContactsNumber);
-                        progressBar.setProgress(0);
-                        Log.i("RDebug", "startHandler");
-                        insertContacts = true;
-                        InsertContactsThread = new InsertContactsThread();
-                        InsertContactsThread.start();
-                        disableUiElement();
-
-
-                    }
+                    Toast.makeText(this, "正在进行数据插入，请稍后！", Toast.LENGTH_SHORT).show();
+                    prAdd.setVisibility(View.VISIBLE);
+                    tvPercent.setVisibility(View.VISIBLE);
+                    prAdd.setMax(insertContactsNumber);
+                    prAdd.setProgress(0);
+                    Log.i("RDebug", "startHandler");
+                    insertContactsThread = new InsertContactsThread();
+                    insertContactsThread.start();
+                    disableUiElement();
+                    hasUpdate = true;
 
 
                 }
+
+
                 break;
             case R.id.bt_deleteAll:
                 // Check Current is idle or not.
-                if (insertContacts) {
-                    Toast.makeText(this, "正在插入联系人，请等待该操作完成！", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (isDeleted) {
-                    Toast.makeText(this, "已经清空联系人了，请等待该操作完成！", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+
 
                 AlertDialog.Builder mBuilderNotes = new AlertDialog.Builder(this);
                 mBuilderNotes.setTitle("即将清空联系人！");
@@ -289,10 +278,9 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), "正在清空联系人，请等待!", Toast.LENGTH_SHORT).show();
-                        DeleteContactsThread deleteContactsThread = new DeleteContactsThread();
+                        deleteContactsThread = new DeleteContactsThread();
                         deleteContactsThread.start();
-                        isDeleted = true;
-                        //  needSave = true;
+                        prDelete.setVisibility(View.VISIBLE);
                         disableUiElement();
 
 
@@ -300,7 +288,9 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                 });
                 mBuilderNotes.setNegativeButton("取消", null);
                 mBuilderNotes.show();
+            case R.id.iv_ad:
 
+                Toast.makeText(getApplicationContext(), "占位符。。。不知道放撒。。。", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -314,7 +304,8 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
             }
             Log.d("RDebug", "Start Add contacts.");
             int insertedContacts = 1;
-            while (insertContacts && insertedContacts <= insertContactsNumber) {
+            while (insertedContacts <= insertContactsNumber) {
+
 
                 String name = BaseUtils.getRandomString(baseString, 5);
                 String email = ContactsUtils.getRandomEmail();
@@ -331,9 +322,6 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                 insertedContacts++;
                 // Log.d("RDebug", "Add contacts Completed."+insertedContacts);
             }
-            // Log.d("RDebug", "Add contacts Completed.");
-            //当生成的数据与输入的数据相等时，停止插入。
-            insertContacts = false;
             message = mHandler.obtainMessage();
             message.what = 2;
             mHandler.sendMessage(message);
@@ -346,24 +334,23 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         public void run() {
-
+            int totalContacts = ContactsUtils.getContactsNumber();
             super.run();
             Log.d("RDebug", "Start Delete contacts.");
-            if (ContactsUtils.getContactsNumber() == 0) {
+            if (totalContacts == 0) {
                 mHandler.sendEmptyMessage(3);
-                return;
+
             } else {
-                while (ContactsUtils.deleteAllContacts()) {
 
-                    mHandler.sendEmptyMessage(3);
-                    break;
+                ContactsUtils.deleteAllContacts();
+                mHandler.sendEmptyMessage(3);
 
 
-                }
             }
 
 
         }
+
     }
 
 
@@ -399,35 +386,43 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
             switch (msg.what) {
                 case 1:
 
-                    progressBar.setProgress(msg.arg1);
-                    // Log.d("RDebug", "正在插入第" + msg.arg1 + "个联系人");
+                    prAdd.setProgress(msg.arg1);
+
+                    float percent = (float) msg.arg1 / insertContactsNumber * 100;
+
+                    if (null != tvPercent) {
+                        tvPercent.setText((int) percent + "%");
+                    }
+
+
                     break;
                 case 2:
                     Log.d("RDebug", "插入完成");
-
+                    allContactsNumber = ContactsUtils.getContactsNumber();
                     // Ui element.
                     enableUiElement();
-                    progressBar.setVisibility(View.GONE);// progress bar.
+                    prAdd.setVisibility(View.GONE);// progress bar.
                     tvTotal.setText(ContactsUtils.getContactsNumber() + "");
                     //update total contacts number
 
+                    tvPercent.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "插入完成!",
                             Toast.LENGTH_SHORT).show();
 
 
-                    insertContacts = false;//update insert status.
-
                     break;
                 case 3:
                     Log.d("RDebug", "联系人已清空");
+                    allContactsNumber = ContactsUtils.getContactsNumber();
                     Toast.makeText(getApplicationContext(), "联系人已清空！", Toast.LENGTH_SHORT).show();
-                    isDeleted = false;
-                    tvTotal.setText(ContactsUtils.getContactsNumber() + "");
+                    tvTotal.setText(allContactsNumber + "");
+                    prDelete.setVisibility(View.GONE);
                     enableUiElement();
 
 
             }
         }
+
     }
 
     private static void disableUiElement() {

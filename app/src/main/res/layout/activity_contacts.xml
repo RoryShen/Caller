@@ -30,7 +30,10 @@
             android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@id/top_Notes"
             app:layout_constraintLeft_toRightOf="@id/tv_an_total_not"
+            app:layout_optimizationLevel="none"
+
     />
+
 
     <TextView
             android:id="@+id/tv_baseChar"
@@ -40,6 +43,42 @@
             android:text="姓名："
             android:textSize="18sp"
             app:layout_constraintTop_toBottomOf="@id/tv_an_total_not"/>
+    <TextView
+            android:id="@+id/tv_newContactsNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="插入数量："
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintHorizontal_weight="0.3"
+            app:layout_constraintBottom_toBottomOf="@id/et_new_Contacts_number"
+            app:layout_constraintEnd_toStartOf="@id/et_new_Contacts_number"
+            app:layout_constraintTop_toTopOf="@id/et_new_Contacts_number"/>
+    <TextView
+            android:id="@+id/tv_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            app:layout_constraintTop_toTopOf="@id/bt_deleteAll"
+            app:layout_constraintBottom_toBottomOf="@id/bt_deleteAll"
+            app:layout_constraintRight_toRightOf="parent"
+            android:visibility="gone"
+    />
+    <ImageView
+            android:id="@+id/iv_ad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:background="@drawable/ic_superman"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/pr_add"
+            app:layout_constraintLeft_toRightOf="@id/tv_an_total_not"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:adjustViewBounds="true"
+            app:layout_optimizationLevel="all"
+
+    />
+
 
     <RadioGroup
             android:id="@+id/nameType"
@@ -90,24 +129,13 @@
     </RadioGroup>
 
 
-    <TextView
-            android:id="@+id/tv_newContactsNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="插入数量："
-            android:textSize="18sp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintHorizontal_weight="0.3"
-            app:layout_constraintBottom_toBottomOf="@id/et_new_Contacts_number"
-            app:layout_constraintEnd_toStartOf="@id/et_new_Contacts_number"
-            app:layout_constraintTop_toTopOf="@id/et_new_Contacts_number"/>
-
     <EditText
             android:id="@+id/et_new_Contacts_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请输入要插入的联系人数量"
             android:inputType="number"
+            android:text="100"
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toEndOf="@id/tv_newContactsNumber"
             app:layout_constraintEnd_toEndOf="parent"
@@ -119,18 +147,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="插入"
+            android:layout_marginTop="5dp"
             app:layout_constraintTop_toBottomOf="@id/et_new_Contacts_number"/>
     <Button
             android:id="@+id/bt_deleteAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="清空"
+            android:layout_marginTop="5dp"
             app:layout_constraintTop_toBottomOf="@id/et_new_Contacts_number"
             app:layout_constraintLeft_toRightOf="@id/bt_insert"/>
 
     <ProgressBar
             style="@android:style/Widget.ProgressBar.Horizontal"
-            android:id="@+id/pr_process"
+            android:id="@+id/pr_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -138,12 +168,17 @@
 
     />
     <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/pr_process"
-        />
+            android:id="@+id/pr_delete"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/bt_deleteAll"
+            app:layout_constraintBottom_toBottomOf="@id/bt_deleteAll"
+            app:layout_constraintRight_toRightOf="parent"
+            android:visibility="gone"
+
+
+    />
 
 </android.support.constraint.ConstraintLayout>
 
