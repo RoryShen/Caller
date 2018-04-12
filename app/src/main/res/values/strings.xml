@@ -6,7 +6,8 @@
 
     <string name="settings">设置</string>
     <string name="help">帮助</string>
-    <string name="string_help_text">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。\n\n最后点击两次后退按钮，即可返回。</string>
+    <string name="string_help_text">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。\n\n最后点击两次后退按钮，即可返回。
+    </string>
     <string name="quit">退出</string>
     <string name="times_error">读取错误，请检查次数和间隔时间！</string>
     <string name="number_short">当前号码太短了。请重新输入哦！</string>
@@ -37,6 +38,9 @@
     <string name="manually_stop">已经手动停止</string>
     <string name="notices">间隔时间建议设置为30秒以上哦，否则会打不通哦！</string>
     <string name="testing">测试进行中</string>
-    <string name="main_notes">If you want make call please select Call; If you want answer call please select answer.</string>
+    <string name="main_notes">If you want make call please select Call; If you want answer call
+        please select answer.
+    </string>
+    <string name="title_activity_call_log">CallLog</string>
 
 </resources>
