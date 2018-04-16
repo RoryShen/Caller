@@ -1,19 +1,22 @@
 package com.ck_telecom.caller.utils;
 
 import com.ck_telecom.caller.activity.MainActivity;
-import com.ck_telecom.caller.config.BaseConfig;
 import com.ck_telecom.caller.config.ContactsConfig;
 
+import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.os.RemoteException;
+import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.RadioGroup;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 
@@ -82,7 +85,7 @@ public class ContactsUtils {
                     .withValue(ContactsConfig.EMAIL_TYPE, ContactsConfig.EMAIL_TYPE_HOME)
                     .withValue(ContactsConfig.EMAIL_DATA, email);
             operations.add(operation.build());
-           // Log.d("AddContacts", email);
+            // Log.d("AddContacts", email);
             //Insert phone.
         }
 
@@ -95,7 +98,7 @@ public class ContactsUtils {
                     .withValue(ContactsConfig.PHONE_NUMBER, phone)
                     .withValue(ContactsConfig.PHONE_TYPE, ContactsConfig.PHONE_TYPE_MOBILE);
             operations.add(operation.build());
-           // Log.d("AddContacts", phone);
+            // Log.d("AddContacts", phone);
             //Insert Address.
         }
 
@@ -110,7 +113,7 @@ public class ContactsUtils {
 //                    .withValue(ContactsConfig.ADDRESS_COUNTRY,"China")
                     .withValue(ContactsConfig.ADDRESS_STREET, address);
             operations.add(operation.build());
-           // Log.d("AddContacts", address);
+            // Log.d("AddContacts", address);
             //Insert notes.
         }
 
@@ -122,7 +125,7 @@ public class ContactsUtils {
                     .withValue(ContactsConfig.MIMETYPE, ContactsConfig.NOTE_ITEM_TYPE)
                     .withValue(ContactsConfig.NOTE_DATA, notes);
             operations.add(operation.build());
-           // Log.d("AddContacts", notes);
+            // Log.d("AddContacts", notes);
         }
 
 
@@ -153,7 +156,7 @@ public class ContactsUtils {
                 .append(BaseUtils.getRandomString(base, length));
 
         String email = builder.toString();
-       // Log.d(BaseConfig.TAG, "New Email is:" + email);
+        // Log.d(BaseConfig.TAG, "New Email is:" + email);
         return email;
 
     }
@@ -164,7 +167,7 @@ public class ContactsUtils {
     public static String getRandmPhone(int length) {
         String base = "+-0123456789";
         String phone = BaseUtils.getRandomString(base, length);
-       // Log.d(BaseConfig.TAG, "New phone is:" + phone);
+        // Log.d(BaseConfig.TAG, "New phone is:" + phone);
         return phone;
 
     }
@@ -227,7 +230,7 @@ public class ContactsUtils {
             while (cursor.moveToNext()) {
 
                 contactsId = cursor.getInt(0);
-              //  Log.d("deleteContactsByName", "Try to delete:" + contactsId);
+                //  Log.d("deleteContactsByName", "Try to delete:" + contactsId);
                 MainActivity.mContext.getContentResolver().delete(ContactsContract.RawContacts.CONTENT_URI, ContactsContract.Data._ID + "=?", new String[]{contactsId + ""});
                 ++id;
             }
@@ -237,7 +240,35 @@ public class ContactsUtils {
         return result;
     }
 
+    @SuppressLint("MissingPermission")
+    public static void insertCallLog(String string, int type) {
+        ContentValues values = new ContentValues();
+        values.put(CallLog.Calls.NUMBER, string);
+        values.put(CallLog.Calls.TYPE, type);
+        values.put(CallLog.Calls.DATE, new Date().getTime());
+        MainActivity.mContext.getContentResolver().insert(CallLog.Calls.CONTENT_URI, values);
+    }
 
+    //统计电话记录
+    @SuppressLint("MissingPermission")
+    public static int getCallLogNumber() {
+        int i = 0;
+        Cursor cursor = MainActivity.mContext.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, null, null, null);
+        if (null != cursor) {
+            i = cursor.getCount();
+            cursor.close();
+        }
+
+
+        return i;
+    }
+
+    //删除通话记录
+    @SuppressLint("MissingPermission")
+    public static int deleteAllCallLog() {
+        ContentResolver resolver = MainActivity.mContext.getContentResolver();
+        return resolver.delete(CallLog.Calls.CONTENT_URI, null, null);
+    }
 }
 
 
