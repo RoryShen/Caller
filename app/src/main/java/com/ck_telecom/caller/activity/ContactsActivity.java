@@ -73,7 +73,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
         mPermissionsChecker = new PermissionUtils(this);
-        mSharedPreferences = getSharedPreferences("InsertContacts", MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences("CallerData", MODE_PRIVATE);
 
     }
 

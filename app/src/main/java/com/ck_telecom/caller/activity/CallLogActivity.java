@@ -1,13 +1,10 @@
 package com.ck_telecom.caller.activity;
 
-import com.ck_telecom.caller.R;
-import com.ck_telecom.caller.utils.ContactsUtils;
-import com.ck_telecom.caller.utils.PermissionUtils;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,21 +15,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.utils.ContactsUtils;
+import com.ck_telecom.caller.utils.PermissionUtils;
+
+import java.util.Random;
 
 public class CallLogActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Ui Element
-    private EditText etPphoneNumber;
-    private EditText etLogNum;
-    private Button btLogInsert;
-    private Button btLogDelete;
-    private TextView tvLogTotal;
-    private RadioButton rdAnswer;
-    private RadioButton rdMiss;
-    private RadioButton rdDial;
-
+    private static EditText etPphoneNumber;
+    private static EditText etLogNum;
+    private static Button btLogInsert;
+    private static Button btLogDelete;
+    private static TextView tvLogTotal;
+    private static RadioButton rdAnswer;
+    private static RadioButton rdMiss;
+    private static RadioButton rdDial;
+    private static RadioGroup rdgType;
 
 
     // internet label.
@@ -47,9 +51,11 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
 
     private Message message;
     private Handler mHandler;
+    private SharedPreferences mCallerData;
 
     //Thread.
-    private insertLogThread mInsertLogThread;
+    private static insertLogThread mInsertLogThread;
+    private static deleteLogThread mDeleteLogThread;
 
 
     @Override
@@ -57,6 +63,8 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call_log);
         mPermissionsChecker = new PermissionUtils(this);
+        mCallerData = getSharedPreferences("CallerData", MODE_PRIVATE);
+
     }
 
 
@@ -90,6 +98,58 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (null != mInsertLogThread && mInsertLogThread.isAlive()) {
+            SharedPreferences.Editor logEditor = mCallerData.edit();
+            logEditor.putString("logPhoneNumber", mPhoneNumber + "");
+            logEditor.putString("logLogNumber", mLogNumber + "");
+            logEditor.apply();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (etPphoneNumber != null) {
+            etPphoneNumber = null;
+        }
+        if (etLogNum != null) {
+            etLogNum = null;
+        }
+        if (btLogInsert != null) {
+            btLogInsert = null;
+        }
+        if (btLogDelete != null) {
+            btLogDelete = null;
+        }
+        if (tvLogTotal != null) {
+            tvLogTotal = null;
+        }
+        if (rdAnswer != null) {
+            rdAnswer = null;
+        }
+        if (rdMiss != null) {
+            rdMiss = null;
+        }
+        if (rdDial != null) {
+            rdDial = null;
+        }
+        if (rdgType != null) {
+            rdgType = null;
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        finish();
+        startActivity(mainIntent);
+    }
+
     private void startPermissionsActivity() {
         PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);
 
@@ -105,6 +165,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initView() {
+
         etPphoneNumber = findViewById(R.id.et_log_phone_num);
         etLogNum = findViewById(R.id.et_log_num);
 
@@ -116,8 +177,18 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         rdMiss = findViewById(R.id.rd_log_miss);
         etLogNum = findViewById(R.id.et_log_num);
         etPphoneNumber = findViewById(R.id.et_log_phone_num);
+        rdgType = findViewById(R.id.rd_log_type);
+        tvLogTotal = findViewById(R.id.tv_log_total_num);
 
 
+        if (null != mInsertLogThread && mInsertLogThread.isAlive()) {
+            disableUiElement();
+        } else if (null != mDeleteLogThread && mDeleteLogThread.isAlive()) {
+            disableUiElement();
+        }
+
+        etPphoneNumber.setText(mCallerData.getString("logPhoneNumber", ""));
+        etLogNum.setText(mCallerData.getString("logLogNumber", ""));
         //Set click listener.
         btLogInsert.setOnClickListener(this);
         btLogDelete.setOnClickListener(this);
@@ -143,6 +214,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.bt_log_insert:
                 insertLog();
+                break;
             case R.id.bt_log_delete:
                 deleteLog();
         }
@@ -156,7 +228,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         if (TextUtils.isEmpty(phoneNumber) | TextUtils.isEmpty(logNumber)) {
             Toast.makeText(this, "请检查输入的号码和数量是否为空！", Toast.LENGTH_SHORT).show();
             return;
-        } else if (null!=mInsertLogThread&&mInsertLogThread.isAlive()) {
+        } else if (null != mInsertLogThread && mInsertLogThread.isAlive()) {
             Toast.makeText(this, "请等待当前插入操作结束！。", Toast.LENGTH_SHORT).show();
         } else {
             mPhoneNumber = Integer.parseInt(phoneNumber);
@@ -165,6 +237,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this, "请稍后，正在进行Log写入。", Toast.LENGTH_SHORT).show();
             mInsertLogThread = new insertLogThread();
             mInsertLogThread.start();
+            disableUiElement();
         }
 
 
@@ -172,24 +245,52 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
 
 
     private void deleteLog() {
+        if (null != mDeleteLogThread && mDeleteLogThread.isAlive()) {
+            Toast.makeText(this, "请等待当前删除执行完毕！", Toast.LENGTH_SHORT).show();
+        } else {
+            mDeleteLogThread = new deleteLogThread();
+            mDeleteLogThread.start();
+            disableUiElement();
+        }
 
     }
 
 
     private class insertLogThread extends Thread {
         int currentLog = 0;
+        Random random = new Random();
+        int time = 0;
 
         @Override
         public void run() {
             super.run();
+
             while (currentLog < mLogNumber) {
-                ContactsUtils.insertCallLog(mPhoneNumber + "", logType);
+                if (logType != 3) {
+                    time = random.nextInt(65535);
+
+                }
+
+                ContactsUtils.insertCallLog(mPhoneNumber + "", logType, time);
                 currentLog++;
-                Log.d("Rdebug",currentLog+"");
+                Log.d("Rdebug", "Current insert:" + currentLog);
 
             }
             mHandler.sendEmptyMessage(1);
 
+
+        }
+    }
+
+    private class deleteLogThread extends Thread {
+        @Override
+        public void run() {
+            super.run();
+            int totalLogNum = ContactsUtils.getCallLogNumber();
+            int deleteLogNum = ContactsUtils.deleteCallLog();
+            if (deleteLogNum == totalLogNum) {
+                mHandler.sendEmptyMessage(2);
+            }
 
 
         }
@@ -201,14 +302,38 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-
                     Toast.makeText(CallLogActivity.this, "通话记录写入完毕！",
                             Toast.LENGTH_SHORT).show();
-                    ContactsUtils.getCallLogNumber();
+
+                    enableUiElement();
+                    tvLogTotal.setText(ContactsUtils.getCallLogNumber() + "");
+                    break;
+                case 2:
+                    Toast.makeText(CallLogActivity.this, "通话记录已清空！",
+                            Toast.LENGTH_SHORT).show();
+                    tvLogTotal.setText(ContactsUtils.getCallLogNumber() + "");
+                    enableUiElement();
                     break;
 
             }
         }
 
+    }
+
+
+    private void disableUiElement() {
+        btLogInsert.setEnabled(false);
+        btLogDelete.setEnabled(false);
+        etLogNum.setEnabled(false);
+        etPphoneNumber.setEnabled(false);
+        ContactsUtils.disableRadioGroup(rdgType);
+    }
+
+    private void enableUiElement() {
+        btLogInsert.setEnabled(true);
+        btLogDelete.setEnabled(true);
+        etLogNum.setEnabled(true);
+        etPphoneNumber.setEnabled(true);
+        ContactsUtils.enableRadioGroup(rdgType);
     }
 }

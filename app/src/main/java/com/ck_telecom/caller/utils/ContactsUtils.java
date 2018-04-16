@@ -241,11 +241,12 @@ public class ContactsUtils {
     }
 
     @SuppressLint("MissingPermission")
-    public static void insertCallLog(String string, int type) {
+    public static void insertCallLog(String string, int type,long duration) {
         ContentValues values = new ContentValues();
         values.put(CallLog.Calls.NUMBER, string);
         values.put(CallLog.Calls.TYPE, type);
         values.put(CallLog.Calls.DATE, new Date().getTime());
+        values.put(CallLog.Calls.DURATION,duration);
         MainActivity.mContext.getContentResolver().insert(CallLog.Calls.CONTENT_URI, values);
     }
 
@@ -265,7 +266,7 @@ public class ContactsUtils {
 
     //删除通话记录
     @SuppressLint("MissingPermission")
-    public static int deleteAllCallLog() {
+    public static int deleteCallLog() {
         ContentResolver resolver = MainActivity.mContext.getContentResolver();
         return resolver.delete(CallLog.Calls.CONTENT_URI, null, null);
     }
