@@ -11,8 +11,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
     <uses-permission android:name="android.permission.WRITE_CALL_LOG"/>
-   <uses-permission android:name="android.permission.READ_CALL_LOG"/>
-
+    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
 
     <application
             android:allowBackup="true"
@@ -28,8 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AnswerActivity"/>
-        <activity android:name=".activity.CallActivity"/>
+        <activity
+                android:name=".activity.AnswerActivity"
+                android:label="接听来电"/>
+        <activity
+                android:name=".activity.CallActivity"
+                android:label="拨打电话"/>
         <activity
                 android:name=".activity.PermissionsActivity"
                 android:theme="@style/AppTheme.NoActionBar.Permissions"/>
@@ -38,8 +41,19 @@
         <service android:name=".service.CallService"/>
         <service android:name=".service.ContactService"/>
 
-        <activity android:name=".activity.ContactsActivity"/>
-        <activity android:name=".activity.CallLogActivity">
+        <activity
+                android:name=".activity.ContactsActivity"
+                android:label="填充联系人"
+        />
+        <activity
+                android:name=".activity.CallLogActivity"
+                android:label="通话记录填充"
+        >
+        </activity>
+        <activity
+                android:name=".activity.MessageActivity"
+                android:label="短信填充"
+        >
         </activity>
     </application>
 

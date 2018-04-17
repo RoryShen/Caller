@@ -188,6 +188,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
             finish();
         } else {
             mSharedPreferences.edit().putBoolean("Init", true).apply();
+            finish();
         }
     }
 
