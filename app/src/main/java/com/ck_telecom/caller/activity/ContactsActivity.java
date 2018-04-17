@@ -181,6 +181,8 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
+       Log.d("RDebug","requestCode:"+requestCode+"resultCode:"+resultCode);
+
         if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
             finish();
         } else {
@@ -242,8 +244,8 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                 } else {
                     insertContactsNumber = Integer.valueOf(etNumber.getText().toString());
                 }
-                if (insertContactsNumber > 500) {
-                    Toast.makeText(this, "当前限制为每次插入500个联系人", Toast.LENGTH_SHORT).show();
+                if (insertContactsNumber > 2000) {
+                    Toast.makeText(this, "当前限制为每次插入2000个联系人", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
 
