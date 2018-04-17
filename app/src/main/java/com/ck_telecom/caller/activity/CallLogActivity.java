@@ -14,10 +14,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -37,6 +37,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
     private static RadioButton rdMiss;
     private static RadioButton rdDial;
     private static RadioGroup rdgType;
+    private static ProgressBar prLogProcess;
 
 
     // internet label.
@@ -48,6 +49,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
     static final String[] PERMISSIONS = new String[]{
             Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG
     };
+    private static boolean hasUpdate = false;
 
     private Message message;
     private Handler mHandler;
@@ -101,11 +103,15 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStop() {
         super.onStop();
-        if (null != mInsertLogThread && mInsertLogThread.isAlive()) {
+
+        if (hasUpdate) {
             SharedPreferences.Editor logEditor = mCallerData.edit();
+
             logEditor.putString("logPhoneNumber", mPhoneNumber );
+
             logEditor.putString("logLogNumber", mLogNumber + "");
             logEditor.apply();
+            hasUpdate = false;
         }
     }
 
@@ -138,6 +144,9 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         }
         if (rdgType != null) {
             rdgType = null;
+        }
+        if (prLogProcess != null) {
+            prLogProcess = null;
         }
 
     }
@@ -179,6 +188,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         etPphoneNumber = findViewById(R.id.et_log_phone_num);
         rdgType = findViewById(R.id.rd_log_type);
         tvLogTotal = findViewById(R.id.tv_log_total_num);
+        prLogProcess = findViewById(R.id.pr_log_process);
 
 
         if (null != mInsertLogThread && mInsertLogThread.isAlive()) {
@@ -233,7 +243,9 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this, "请等待当前插入操作结束！", Toast.LENGTH_SHORT).show();
         } else {
             if (TextUtils.isEmpty(phoneNumber)) {
+
                 mPhoneNumber =ContactsUtils.getRandPhone(new Random().nextInt(20)) ;
+
                 etPphoneNumber.setText(mPhoneNumber);
 
             } else {
@@ -241,11 +253,18 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
             }
 
             mLogNumber = Integer.parseInt(logNumber);
+            if(mLogNumber>2000){
+                Toast.makeText(this, "当前限制插入单次插入个数为2000！", Toast.LENGTH_SHORT).show();
+                return;
+            }else{
+                Toast.makeText(this, "请稍后，正在进行Log写入。", Toast.LENGTH_SHORT).show();
+                mInsertLogThread = new insertLogThread();
+                mInsertLogThread.start();
+                disableUiElement();
+                hasUpdate = true;
+            }
 
-            Toast.makeText(this, "请稍后，正在进行Log写入。", Toast.LENGTH_SHORT).show();
-            mInsertLogThread = new insertLogThread();
-            mInsertLogThread.start();
-            disableUiElement();
+
         }
 
 
@@ -259,6 +278,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
             mDeleteLogThread = new deleteLogThread();
             mDeleteLogThread.start();
             disableUiElement();
+            hasUpdate = true;
         }
 
     }
@@ -281,7 +301,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
 
                 ContactsUtils.insertCallLog(mPhoneNumber, logType, time);
                 currentLog++;
-                //Log.d("Rdebug", "Current insert:" + currentLog);
+
 
             }
             mHandler.sendEmptyMessage(1);
@@ -315,12 +335,14 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
 
                     enableUiElement();
                     tvLogTotal.setText(ContactsUtils.getCallLogNumber() + "");
+
                     break;
                 case 2:
                     Toast.makeText(CallLogActivity.this, "通话记录已清空！",
                             Toast.LENGTH_SHORT).show();
                     tvLogTotal.setText(ContactsUtils.getCallLogNumber() + "");
                     enableUiElement();
+
                     break;
 
             }
@@ -335,6 +357,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         etLogNum.setEnabled(false);
         etPphoneNumber.setEnabled(false);
         ContactsUtils.disableRadioGroup(rdgType);
+        prLogProcess.setVisibility(View.VISIBLE);
     }
 
     private void enableUiElement() {
@@ -343,5 +366,6 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         etLogNum.setEnabled(true);
         etPphoneNumber.setEnabled(true);
         ContactsUtils.enableRadioGroup(rdgType);
+        prLogProcess.setVisibility(View.GONE);
     }
 }
