@@ -1,5 +1,9 @@
 package com.ck_telecom.caller.activity;
 
+import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.utils.ContactsUtils;
+import com.ck_telecom.caller.utils.PermissionUtils;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -19,10 +23,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ck_telecom.caller.R;
-import com.ck_telecom.caller.utils.ContactsUtils;
-import com.ck_telecom.caller.utils.PermissionUtils;
-
 import java.util.Random;
 
 public class CallLogActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,7 +41,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
 
     // internet label.
     private int logType = 3;
-    private int mPhoneNumber;
+    private String mPhoneNumber;
     private int mLogNumber;
     private PermissionUtils mPermissionsChecker; // permission checker.
     private static final int REQUEST_CODE = 0; // 请求码
@@ -103,7 +103,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         super.onStop();
         if (null != mInsertLogThread && mInsertLogThread.isAlive()) {
             SharedPreferences.Editor logEditor = mCallerData.edit();
-            logEditor.putString("logPhoneNumber", mPhoneNumber + "");
+            logEditor.putString("logPhoneNumber", mPhoneNumber );
             logEditor.putString("logLogNumber", mLogNumber + "");
             logEditor.apply();
         }
@@ -195,6 +195,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         rdMiss.setOnClickListener(this);
         rdAnswer.setOnClickListener(this);
         rdDial.setOnClickListener(this);
+        tvLogTotal.setText(ContactsUtils.getCallLogNumber() + "");
 
 
     }
@@ -225,13 +226,20 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
     private void insertLog() {
         String phoneNumber = etPphoneNumber.getText().toString();
         String logNumber = etLogNum.getText().toString();
-        if (TextUtils.isEmpty(phoneNumber) | TextUtils.isEmpty(logNumber)) {
-            Toast.makeText(this, "请检查输入的号码和数量是否为空！", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(logNumber)) {
+            Toast.makeText(this, "请检查输入的数量是否为空！", Toast.LENGTH_SHORT).show();
             return;
         } else if (null != mInsertLogThread && mInsertLogThread.isAlive()) {
-            Toast.makeText(this, "请等待当前插入操作结束！。", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请等待当前插入操作结束！", Toast.LENGTH_SHORT).show();
         } else {
-            mPhoneNumber = Integer.parseInt(phoneNumber);
+            if (TextUtils.isEmpty(phoneNumber)) {
+                mPhoneNumber =ContactsUtils.getRandPhone(new Random().nextInt(20)) ;
+                etPphoneNumber.setText(mPhoneNumber);
+
+            } else {
+                mPhoneNumber = phoneNumber;
+            }
+
             mLogNumber = Integer.parseInt(logNumber);
 
             Toast.makeText(this, "请稍后，正在进行Log写入。", Toast.LENGTH_SHORT).show();
@@ -271,9 +279,9 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
 
                 }
 
-                ContactsUtils.insertCallLog(mPhoneNumber + "", logType, time);
+                ContactsUtils.insertCallLog(mPhoneNumber, logType, time);
                 currentLog++;
-                Log.d("Rdebug", "Current insert:" + currentLog);
+                //Log.d("Rdebug", "Current insert:" + currentLog);
 
             }
             mHandler.sendEmptyMessage(1);

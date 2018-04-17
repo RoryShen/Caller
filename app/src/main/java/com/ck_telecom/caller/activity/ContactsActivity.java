@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -304,7 +303,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
                 String name = BaseUtils.getRandomString(baseString, 5);
                 String email = ContactsUtils.getRandomEmail();
-                String phone = ContactsUtils.getRandmPhone(8);
+                String phone = ContactsUtils.getRandPhone(8);
                 String address = BaseUtils.getRandomString(baseString, 10);
                 String notes = BaseUtils.getRandomString(baseString, 20);
 

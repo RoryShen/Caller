@@ -164,11 +164,13 @@ public class ContactsUtils {
     /**
      * Get a random phone number.
      */
-    public static String getRandmPhone(int length) {
-        String base = "+-0123456789";
-        String phone = BaseUtils.getRandomString(base, length);
+    public static String getRandPhone(int length) {
+        String base = "0123456789";
+
+        String country = "+" + BaseUtils.getRandomString(base, new Random().nextInt(4));
+
         // Log.d(BaseConfig.TAG, "New phone is:" + phone);
-        return phone;
+        return country + BaseUtils.getRandomString(base, length);
 
     }
 
@@ -241,12 +243,12 @@ public class ContactsUtils {
     }
 
     @SuppressLint("MissingPermission")
-    public static void insertCallLog(String string, int type,long duration) {
+    public static void insertCallLog(String string, int type, long duration) {
         ContentValues values = new ContentValues();
         values.put(CallLog.Calls.NUMBER, string);
         values.put(CallLog.Calls.TYPE, type);
         values.put(CallLog.Calls.DATE, new Date().getTime());
-        values.put(CallLog.Calls.DURATION,duration);
+        values.put(CallLog.Calls.DURATION, duration);
         MainActivity.mContext.getContentResolver().insert(CallLog.Calls.CONTENT_URI, values);
     }
 
