@@ -1,8 +1,5 @@
 package com.ck_telecom.caller.activity;
 
-import com.ck_telecom.caller.R;
-import com.ck_telecom.caller.utils.ContactsUtils;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +14,10 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.utils.ContactsUtils;
+import com.ck_telecom.caller.utils.MessageUtils;
+
 public class MessageActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
     private SharedPreferences mSharedPreferences;
     private boolean isNotices = true;
@@ -27,6 +28,9 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private static TextView tvSmsNumber;
     private static RadioGroup mrdSmsType;
     private static RadioGroup mrdSmsStatus;
+    private static int messageNumber;
+    private static String messageAddress;
+    private static insertMessageThread insertMessageThread;
 
     private String smsType = "1";
     private String smsStatus = "1";
@@ -115,6 +119,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         btInsert = findViewById(R.id.bt_sms_insert);
 
         btInsert.setOnClickListener(this);
+        btDelete.setOnClickListener(this);
         mrdSmsStatus.setOnCheckedChangeListener(this);
         mrdSmsType.setOnCheckedChangeListener(this);
         // disableUIElement();
@@ -132,6 +137,12 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.bt_sms_insert:
                 Log.d("RDebug", "SMSType:" + smsType + ",Sms Status:" + smsStatus);
+                messageNumber = Integer.valueOf(etNumber.getText().toString());
+                messageAddress = etPhoneNumber.getText().toString();
+                insertMessageThread = new insertMessageThread();
+                insertMessageThread.start();
+
+
                 break;
 
         }
@@ -153,6 +164,9 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.rd_sms_unread:
                 smsStatus = "0";
+                break;
+            case R.id.bt_sms_delete:
+                MessageUtils.clearMessage();
                 break;
 
 
@@ -178,5 +192,18 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         ContactsUtils.enableRadioGroup(mrdSmsType);
     }
 
-
+    private class insertMessageThread extends Thread {
+        @Override
+        public void run() {
+            Log.d("RDebug", "Start message insert");
+            super.run();
+            int currentMessageNumber = 0;
+            while (currentMessageNumber < messageNumber) {
+                Log.d("RDebug", "Start  insert" + currentMessageNumber + "message");
+                MessageUtils.insertMessage(messageAddress, smsType, smsStatus, "Hello");
+                currentMessageNumber++;
+            }
+            Log.d("RDebug", "Done");
+        }
+    }
 }

@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/et_sms_phoneNum"
             android:layout_marginTop="10dp"
+        android:inputType="number"
             android:hint="请输入短信数量"/>
 
     <RadioGroup android:id="@+id/rd_sms_smsType"

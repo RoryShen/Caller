@@ -1,11 +1,14 @@
 package com.ck_telecom.caller.utils;
 
-import com.ck_telecom.caller.activity.MainActivity;
-
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.Telephony;
+
+import com.ck_telecom.caller.activity.MainActivity;
+
+import java.util.Date;
 
 /**
  * Author/作者: Rory
@@ -16,6 +19,7 @@ import android.provider.Telephony;
 public class MessageUtils {
     /**
      * get current message number.include inbox and send box.
+     *
      * @return
      */
 
@@ -35,6 +39,25 @@ public class MessageUtils {
     public static int clearMessage() {
         Uri allUri = Telephony.MmsSms.CONTENT_CONVERSATIONS_URI;
         return MainActivity.mContext.getContentResolver().delete(allUri, null, null);
+    }
+
+
+    public static void insertMessage(String phone, String messageType, String messageState, String smsBody) {
+
+        ContentValues values = new ContentValues();
+        values.put("address", phone);
+        values.put("type", messageType);
+        if (messageType.equals("1")) {
+            values.put("date_sent", new Date().getTime());
+        }
+        values.put("read", messageState);
+        values.put("body", smsBody);
+        values.put("date", new Date().getTime());
+        values.put("reply_path_present", 0);
+        MainActivity.mContext.getApplicationContext().getContentResolver()
+                .insert(Uri.parse("content://sms/inbox"), values);
+
+
     }
 
 }
