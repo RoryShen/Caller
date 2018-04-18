@@ -2,9 +2,128 @@
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent" android:layout_height="match_parent"
         tools:context="com.ck_telecom.caller.activity.MessageActivity">
 
+    <TextView
+            android:id="@+id/tv_sms_notices"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="如无法正常工作，请检查当前默认短信应用！"
+            android:textSize="20sp"
+            android:textColor="@color/colorAccent"
+    />
+    <TextView
+            android:id="@+id/tv_sms_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前数量："
+            app:layout_constraintTop_toBottomOf="@id/rd_sms_smsType"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+
+    />
+    <TextView
+            android:id="@+id/tv_sms_total_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintTop_toBottomOf="@id/rd_sms_smsType"
+            app:layout_constraintLeft_toRightOf="@id/tv_sms_total"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+
+    />
+    <EditText
+            android:id="@+id/et_sms_phoneNum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入发件人号码，为空则为随机生成"
+            android:layout_marginTop="10dp"
+            android:inputType="phone"
+            app:layout_constraintTop_toBottomOf="@id/tv_sms_notices"
+    />
+    <EditText
+            android:id="@+id/et_sms_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/et_sms_phoneNum"
+            android:layout_marginTop="10dp"
+            android:hint="请输入短信数量"/>
+
+    <RadioGroup android:id="@+id/rd_sms_smsType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/et_sms_number"
+    >
+        <RadioButton
+                android:id="@+id/rd_sms_receive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Receive"
+                android:checked="true"/>
+        <RadioButton
+                android:id="@+id/rd_sms_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Send"/>
+        <RadioButton
+                android:id="@+id/rd_sms_draft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Draft"/>
+
+
+    </RadioGroup>
+    <RadioGroup
+            android:id="@+id/rd_sms_smsStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toRightOf="@id/rd_sms_smsType"
+            app:layout_constraintTop_toBottomOf="@id/et_sms_number"
+    >
+        <RadioButton
+                android:id="@+id/rd_sms_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read"
+                android:checked="true"/>
+        <RadioButton
+                android:id="@+id/rd_sms_unread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UnRead"/>
+    </RadioGroup>
+
+    <Button
+            android:id="@+id/bt_sms_insert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="插入"
+            app:layout_constraintBottom_toBottomOf="@id/bt_sms_delete"
+            app:layout_constraintTop_toTopOf="@id/bt_sms_delete"
+
+            app:layout_constraintRight_toLeftOf="@id/bt_sms_delete"
+            android:layout_marginEnd="10dp"
+    />
+    <Button
+            android:id="@+id/bt_sms_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清空"
+
+            app:layout_constraintTop_toBottomOf="@id/rd_sms_smsType"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+    />
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.1"
+    android:background="@drawable/ic_sms"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mAnswer;
     private Button mDialing;
     private Button mCallLog;
+    private Button mSms;
 
 
     @Override
@@ -37,12 +38,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDialing = findViewById(R.id.bt_main_call);
         mAnswer = findViewById(R.id.bt_main_answer);
         mCallLog = findViewById(R.id.bt_main_log);
+        mSms = findViewById(R.id.bt_main_sms);
 
 
         mContacts.setOnClickListener(this);
         mDialing.setOnClickListener(this);
         mAnswer.setOnClickListener(this);
         mCallLog.setOnClickListener(this);
+        mSms.setOnClickListener(this);
+
     }
 
 
@@ -67,6 +71,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bt_main_log:
                 Intent logIntent = new Intent(this, CallLogActivity.class);
                 startActivityForResult(logIntent, 0);
+                finish();
+                break;
+            case R.id.bt_main_sms:
+                Intent smsIntent = new Intent(this, MessageActivity.class);
+                startActivityForResult(smsIntent, 0);
                 finish();
         }
 
