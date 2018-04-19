@@ -39,18 +39,28 @@
             android:id="@+id/et_sms_phoneNum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="请输入发件人号码，为空则为随机生成"
+            android:hint="请输入发件人号码"
             android:layout_marginTop="10dp"
             android:inputType="phone"
-            app:layout_constraintTop_toBottomOf="@id/tv_sms_notices"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/rd_sms_isRandom"
     />
     <EditText
-            android:id="@+id/et_sms_number"
+            android:id="@+id/et_sms_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/et_sms_phoneNum"
             android:layout_marginTop="10dp"
-        android:inputType="number"
+            android:minHeight="100dp"
+            android:hint="请输入短信内容"
+            android:visibility="gone"/>
+    <EditText
+            android:id="@+id/et_sms_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/et_sms_body"
+            android:layout_marginTop="10dp"
+            android:inputType="number"
             android:hint="请输入短信数量"/>
 
     <RadioGroup android:id="@+id/rd_sms_smsType"
@@ -58,6 +68,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/et_sms_number"
+                android:visibility="gone"
+                android:layout_marginLeft="10dp"
     >
         <RadioButton
                 android:id="@+id/rd_sms_receive"
@@ -74,7 +86,8 @@
                 android:id="@+id/rd_sms_draft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Draft"/>
+                android:text="Draft"
+                android:visibility="gone"/>
 
 
     </RadioGroup>
@@ -85,7 +98,7 @@
             android:orientation="horizontal"
             app:layout_constraintLeft_toRightOf="@id/rd_sms_smsType"
             app:layout_constraintTop_toBottomOf="@id/et_sms_number"
-    >
+            android:visibility="gone">
         <RadioButton
                 android:id="@+id/rd_sms_read"
                 android:layout_width="wrap_content"
@@ -97,6 +110,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="UnRead"/>
+    </RadioGroup>
+    <RadioGroup
+            android:id="@+id/rd_sms_isRandom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/tv_sms_notices"
+
+    >
+        <RadioButton
+                android:id="@+id/rd_sms_random"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Random"
+                android:checked="true"/>
+        <RadioButton
+                android:id="@+id/rd_sms_notRandom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Custom"/>
     </RadioGroup>
 
     <Button
@@ -121,10 +154,24 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
     />
+    <ProgressBar
+            android:id="@+id/pr_sms_process"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bt_sms_delete"
+            android:alpha="0.7"
+            android:visibility="gone"
+
+
+    />
+
     <ImageView
+            android:id="@+id/iv_sms_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.1"
-    android:background="@drawable/ic_sms"/>
+            android:background="@drawable/ic_sms"/>
 
 </android.support.constraint.ConstraintLayout>

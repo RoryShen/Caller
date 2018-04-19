@@ -2,13 +2,16 @@ package com.ck_telecom.caller.activity;
 
 
 import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.utils.BaseUtils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static Context mContext;
@@ -17,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mDialing;
     private Button mCallLog;
     private Button mSms;
+    private TextView mtvVersionCode;
+    private TextView mtvVersionName;
 
 
     @Override
@@ -39,6 +44,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAnswer = findViewById(R.id.bt_main_answer);
         mCallLog = findViewById(R.id.bt_main_log);
         mSms = findViewById(R.id.bt_main_sms);
+        mtvVersionCode = findViewById(R.id.tv_main_versionCode);
+        mtvVersionName = findViewById(R.id.tv_main_versionName);
+        try {
+            mtvVersionCode.setText("Version:" + BaseUtils.getVersion(mContext));
+            mtvVersionName.setText(BaseUtils.getVersionName(mContext));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
 
         mContacts.setOnClickListener(this);
@@ -80,4 +93,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
 }

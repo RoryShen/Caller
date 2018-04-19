@@ -125,7 +125,7 @@
         app:layout_constraintLeft_toRightOf="@id/bt_main_mms"/>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_main_versionCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Version:1.0"
@@ -133,6 +133,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
 
         />
+    <TextView
+            android:id="@+id/tv_main_versionName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="beta"
+            android:textSize="25dp"
+           app:layout_constraintBottom_toTopOf="@id/tv_main_versionCode"
+
+    />
 
 
 </android.support.constraint.ConstraintLayout>

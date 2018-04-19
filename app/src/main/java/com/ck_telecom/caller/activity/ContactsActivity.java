@@ -307,7 +307,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
                 String name = BaseUtils.getRandomString(baseString, 5);
                 String email = ContactsUtils.getRandomEmail();
-                String phone = ContactsUtils.getRandPhone(8);
+                String phone = BaseUtils.getRandPhone(8);
                 String address = BaseUtils.getRandomString(baseString, 10);
                 String notes = BaseUtils.getRandomString(baseString, 20);
 
@@ -427,14 +427,14 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         btDeleteAll.setEnabled(false);
         btInsert.setEnabled(false);
         etNumber.setEnabled(false);
-        ContactsUtils.disableRadioGroup(radioGroup);
+        BaseUtils.disableRadioGroup(radioGroup);
     }
 
     private static void enableUiElement() {
         btDeleteAll.setEnabled(true);
         btInsert.setEnabled(true);
         etNumber.setEnabled(true);
-        ContactsUtils.enableRadioGroup(radioGroup);
+        BaseUtils.enableRadioGroup(radioGroup);
     }
 }
 

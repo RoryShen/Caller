@@ -1,22 +1,27 @@
 package com.ck_telecom.caller.activity;
 
+import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.utils.BaseUtils;
+import com.ck_telecom.caller.utils.MessageUtils;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Telephony;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import com.ck_telecom.caller.R;
-import com.ck_telecom.caller.utils.ContactsUtils;
-import com.ck_telecom.caller.utils.MessageUtils;
+import android.widget.Toast;
 
 public class MessageActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
     private SharedPreferences mSharedPreferences;
@@ -28,12 +33,23 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private static TextView tvSmsNumber;
     private static RadioGroup mrdSmsType;
     private static RadioGroup mrdSmsStatus;
+    private static RadioGroup mrdSmsIsRandom;
+    private static EditText etSmsBody;
+    private static ProgressBar sProgressBar;
+    private Handler mHandler;
+    private boolean display = false;
+
+
     private static int messageNumber;
     private static String messageAddress;
+    private static String messageBody;
     private static insertMessageThread insertMessageThread;
+    private static deleteMessageThread deleteMessageThread;
 
     private String smsType = "1";
     private String smsStatus = "1";
+    private boolean isRandom = true;
+
 
 
     @Override
@@ -42,15 +58,18 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_message);
 
 
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         String currentSmsApp = getPackageName();
         String defaultSmsApp;
         defaultSmsApp = Telephony.Sms.getDefaultSmsPackage(this);
-        if (isNotices && !defaultSmsApp.equals(currentSmsApp)) {
+        boolean isDefaultSms = defaultSmsApp.equals(currentSmsApp);
+        if (isNotices && !isDefaultSms) {
             AlertDialog.Builder mNotices = new AlertDialog.Builder(this);
             mNotices.setTitle("更改默认短信程序?");
             mNotices.setMessage("请先把本程序设置为默认短信APP，才可以进行短信填充哦！");
@@ -75,10 +94,17 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
             mNotices.show();
+
+        } else {
+            initView();
         }
-        initView();
+        Log.d("RDebug", "default app:" + isDefaultSms);
+        // Log.d("RDebug","Read SMS:"+mPermissionChecker.hasPermissions(PERMISSIONS));
+
 
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -104,6 +130,15 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         if (mrdSmsType != null) {
             mrdSmsType = null;
         }
+        if (mrdSmsIsRandom != null) {
+            mrdSmsIsRandom = null;
+        }
+        if (etSmsBody != null) {
+            etSmsBody = null;
+        }
+        if (sProgressBar != null) {
+            sProgressBar = null;
+        }
 
 
     }
@@ -117,16 +152,29 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         mrdSmsStatus = findViewById(R.id.rd_sms_smsStatus);
         btDelete = findViewById(R.id.bt_sms_delete);
         btInsert = findViewById(R.id.bt_sms_insert);
+        mrdSmsIsRandom = findViewById(R.id.rd_sms_isRandom);
+        etSmsBody = findViewById(R.id.et_sms_body);
+        sProgressBar = findViewById(R.id.pr_sms_process);
+        tvSmsNumber = findViewById(R.id.tv_sms_total_num);
 
         btInsert.setOnClickListener(this);
         btDelete.setOnClickListener(this);
         mrdSmsStatus.setOnCheckedChangeListener(this);
         mrdSmsType.setOnCheckedChangeListener(this);
+        mrdSmsIsRandom.setOnCheckedChangeListener(this);
         // disableUIElement();
+        tvSmsNumber.setText(MessageUtils.getAllSmsNumber() + "");
+        if (null != insertMessageThread && insertMessageThread.isAlive()
+                ||null!=deleteMessageThread&&deleteMessageThread.isAlive()) {
+            disableUIElement();
+        }
+
+
     }
 
     @Override
     public void onClick(View v) {
+        mHandler = new messageHandler();
         switch (v.getId()) {
             case R.id.tv_sms_notices:
                 isNotices = false;
@@ -137,13 +185,32 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.bt_sms_insert:
                 Log.d("RDebug", "SMSType:" + smsType + ",Sms Status:" + smsStatus);
-                messageNumber = Integer.valueOf(etNumber.getText().toString());
-                messageAddress = etPhoneNumber.getText().toString();
+
+                if (TextUtils.isEmpty(etNumber.getText().toString())) {
+                    Toast.makeText(this, "插入数量为空哦！", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    messageNumber = Integer.valueOf(etNumber.getText().toString());
+                }
+                if (!isRandom) {
+                    messageAddress = etPhoneNumber.getText().toString();
+                    if (TextUtils.isEmpty(etSmsBody.getText().toString())) {
+                        Toast.makeText(this, "短信内容不能为空", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        messageBody = etSmsBody.getText().toString();
+                    }
+
+
+                }
                 insertMessageThread = new insertMessageThread();
                 insertMessageThread.start();
-
-
+                disableUIElement();
                 break;
+            case R.id.bt_sms_delete:
+                deleteMessageThread = new deleteMessageThread();
+                deleteMessageThread.start();
+                disableUIElement();
 
         }
     }
@@ -168,6 +235,15 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.bt_sms_delete:
                 MessageUtils.clearMessage();
                 break;
+            case R.id.rd_sms_random:
+                isRandom = true;
+                isRandom();
+                break;
+            case R.id.rd_sms_notRandom:
+                isRandom = false;
+
+                notRandom();
+                break;
 
 
         }
@@ -179,17 +255,42 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         etNumber.setEnabled(false);
         btInsert.setEnabled(false);
         btDelete.setEnabled(false);
-        ContactsUtils.disableRadioGroup(mrdSmsStatus);
-        ContactsUtils.disableRadioGroup(mrdSmsType);
+        etSmsBody.setEnabled(false);
+        BaseUtils.disableRadioGroup(mrdSmsStatus);
+        BaseUtils.disableRadioGroup(mrdSmsType);
+        BaseUtils.disableRadioGroup(mrdSmsIsRandom);
+        sProgressBar.setVisibility(View.VISIBLE);
     }
 
-    private void ensableUIElement() {
+    private void enableUIElement() {
         etPhoneNumber.setEnabled(true);
         etNumber.setEnabled(true);
         btInsert.setEnabled(true);
         btDelete.setEnabled(true);
-        ContactsUtils.enableRadioGroup(mrdSmsStatus);
-        ContactsUtils.enableRadioGroup(mrdSmsType);
+        etSmsBody.setEnabled(true);
+
+        BaseUtils.enableRadioGroup(mrdSmsStatus);
+        BaseUtils.enableRadioGroup(mrdSmsType);
+        BaseUtils.enableRadioGroup(mrdSmsIsRandom);
+        sProgressBar.setVisibility(View.GONE);
+
+    }
+
+    private void notRandom() {
+        etSmsBody.setVisibility(View.VISIBLE);
+        etPhoneNumber.setVisibility(View.VISIBLE);
+        mrdSmsType.setVisibility(View.VISIBLE);
+        mrdSmsStatus.setVisibility(View.VISIBLE);
+
+
+    }
+
+    private void isRandom() {
+
+        etSmsBody.setVisibility(View.GONE);
+        etPhoneNumber.setVisibility(View.GONE);
+        mrdSmsType.setVisibility(View.GONE);
+        mrdSmsStatus.setVisibility(View.GONE);
     }
 
     private class insertMessageThread extends Thread {
@@ -199,11 +300,58 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             super.run();
             int currentMessageNumber = 0;
             while (currentMessageNumber < messageNumber) {
+                if (isRandom) {
+                    MessageUtils.insertMessage();
+                } else {
+                    MessageUtils.insertMessage(messageAddress, smsType, smsStatus, messageBody);
+                }
                 Log.d("RDebug", "Start  insert" + currentMessageNumber + "message");
-                MessageUtils.insertMessage(messageAddress, smsType, smsStatus, "Hello");
+
                 currentMessageNumber++;
             }
+            mHandler.sendEmptyMessage(1);
             Log.d("RDebug", "Done");
         }
+    }
+
+    private class deleteMessageThread extends Thread {
+        @Override
+        public void run() {
+            super.run();
+            if (MessageUtils.getAllSmsNumber() == MessageUtils.clearMessage()) {
+                mHandler.sendEmptyMessage(2);
+            }
+
+
+        }
+    }
+
+    private class messageHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    Log.d("RDebug", "Insert done");
+                    Toast.makeText(MessageActivity.this, "短信插入完毕！", Toast.LENGTH_SHORT).show();
+                    enableUIElement();
+                    tvSmsNumber.setText(MessageUtils.getAllSmsNumber() + "");
+                    Log.d("RDebug", MessageUtils.getAllSmsNumber() + "");
+                    break;
+                case 2:
+                    enableUIElement();
+                    Toast.makeText(MessageActivity.this, "短信已清空！", Toast.LENGTH_SHORT).show();
+                    tvSmsNumber.setText(MessageUtils.getAllSmsNumber() + "");
+
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        finish();
+        startActivity(mainIntent);
     }
 }

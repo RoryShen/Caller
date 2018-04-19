@@ -1,5 +1,9 @@
 package com.ck_telecom.caller.utils;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.widget.RadioGroup;
+
 import java.util.Random;
 
 /**
@@ -36,4 +40,64 @@ public class BaseUtils {
         }
         return str.toString();
     }
+
+    public static String getEnglishRandomString(int length) {
+        String baseString = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+        return getRandomString(baseString, length);
+    }
+
+    /**
+     * Get a random phone number.
+     */
+    public static String getRandPhone(int length) {
+        String base = "0123456789";
+
+        String country = "+" + BaseUtils.getRandomString(base, new Random().nextInt(4));
+
+        // Log.d(BaseConfig.TAG, "New phone is:" + phone);
+        return country + BaseUtils.getRandomString(base, length);
+
+    }
+
+    /**
+     * Set the radio button status to disable.
+     */
+    public static void disableRadioGroup(RadioGroup radioGroup) {
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            radioGroup.getChildAt(i).setEnabled(false);
+        }
+    }
+
+    /**
+     * Set the radio button status to disable.
+     */
+    public static void enableRadioGroup(RadioGroup radioGroup) {
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            radioGroup.getChildAt(i).setEnabled(true);
+        }
+    }
+
+    /**
+     * get current app version code.
+     *
+     * @return version code.
+     */
+    public static float getVersion(Context context) throws PackageManager.NameNotFoundException {
+
+
+        return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+
+
+    }
+
+    /**
+     * get current app version name.
+     *
+     * @return version name.
+     */
+    public static String getVersionName(Context context) throws PackageManager.NameNotFoundException {
+        return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+    }
+
+
 }

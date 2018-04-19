@@ -1,6 +1,7 @@
 package com.ck_telecom.caller.activity;
 
 import com.ck_telecom.caller.R;
+import com.ck_telecom.caller.utils.BaseUtils;
 import com.ck_telecom.caller.utils.ContactsUtils;
 import com.ck_telecom.caller.utils.PermissionUtils;
 
@@ -244,7 +245,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             if (TextUtils.isEmpty(phoneNumber)) {
 
-                mPhoneNumber =ContactsUtils.getRandPhone(new Random().nextInt(20)) ;
+                mPhoneNumber = BaseUtils.getRandPhone(new Random().nextInt(20)) ;
 
                 etPphoneNumber.setText(mPhoneNumber);
 
@@ -356,7 +357,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         btLogDelete.setEnabled(false);
         etLogNum.setEnabled(false);
         etPphoneNumber.setEnabled(false);
-        ContactsUtils.disableRadioGroup(rdgType);
+        BaseUtils.disableRadioGroup(rdgType);
         prLogProcess.setVisibility(View.VISIBLE);
     }
 
@@ -365,7 +366,7 @@ public class CallLogActivity extends AppCompatActivity implements View.OnClickLi
         btLogDelete.setEnabled(true);
         etLogNum.setEnabled(true);
         etPphoneNumber.setEnabled(true);
-        ContactsUtils.enableRadioGroup(rdgType);
+        BaseUtils.enableRadioGroup(rdgType);
         prLogProcess.setVisibility(View.GONE);
     }
 }

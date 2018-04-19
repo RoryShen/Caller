@@ -161,36 +161,8 @@ public class ContactsUtils {
 
     }
 
-    /**
-     * Get a random phone number.
-     */
-    public static String getRandPhone(int length) {
-        String base = "0123456789";
 
-        String country = "+" + BaseUtils.getRandomString(base, new Random().nextInt(4));
 
-        // Log.d(BaseConfig.TAG, "New phone is:" + phone);
-        return country + BaseUtils.getRandomString(base, length);
-
-    }
-
-    /**
-     * Set the radio button status to disable.
-     */
-    public static void disableRadioGroup(RadioGroup radioGroup) {
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            radioGroup.getChildAt(i).setEnabled(false);
-        }
-    }
-
-    /**
-     * Set the radio button status to disable.
-     */
-    public static void enableRadioGroup(RadioGroup radioGroup) {
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            radioGroup.getChildAt(i).setEnabled(true);
-        }
-    }
 
     /**
      * Get contacts Number.
