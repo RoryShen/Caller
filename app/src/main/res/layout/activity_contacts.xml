@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        tools:context="com.ck_telecom.caller.activity.MainActivity">
+        tools:context="com.ck_telecom.testassistant.activity.MainActivity">
     <TextView
             android:id="@+id/top_Notes"
             android:layout_width="wrap_content"
