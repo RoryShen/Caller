@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mSms;
     private TextView mtvVersionCode;
     private TextView mtvVersionName;
+    private Button mbtMms;
 
 
     @Override
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSms = findViewById(R.id.bt_main_sms);
         mtvVersionCode = findViewById(R.id.tv_main_versionCode);
         mtvVersionName = findViewById(R.id.tv_main_versionName);
+        mbtMms=findViewById(R.id.bt_main_mms);
         try {
             mtvVersionCode.setText("Version:" + BaseUtils.getVersion(mContext));
             mtvVersionName.setText(BaseUtils.getVersionName(mContext));
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAnswer.setOnClickListener(this);
         mCallLog.setOnClickListener(this);
         mSms.setOnClickListener(this);
+        mbtMms.setOnClickListener(this);
 
     }
 
@@ -90,8 +93,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent smsIntent = new Intent(this, MessageActivity.class);
                 startActivityForResult(smsIntent, 0);
                 finish();
-                default:
-                    Toast.makeText(this, "当前功能不可用！", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.bt_main_mms:
+                Intent mmsIntent = new Intent(this, MmsActivity.class);
+                startActivityForResult(mmsIntent, 0);
+                finish();
+                break;
         }
 
     }
